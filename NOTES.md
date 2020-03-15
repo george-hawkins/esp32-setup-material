@@ -91,6 +91,57 @@ Then I generated a new component:
 
 And updated the generated skeleton files to display a clickable list of (dummy) access points (and log to the console when an item in the list is clicked).
 
+Production build
+----------------
+
+To build a set of files suitable for production deployment:
+
+    $ ng build --prod
+
+The result ends up in `dist/esp32-setup`. To quickly test them out without any backend:
+
+    $ cd dist/esp32-setup
+    $ python3 -m http.server
+
+And open http://localhost:8000/ in your browser.
+
+If you open the network tab in your browser's developer tools, you'll notice that it's not quite all local. There are two requests for CSS from fonts.googleapis.com and these reference `.woff2` files for Material icons and the Roboto font.
+
+Moving to self-hosted icon and font files
+-----------------------------------------
+
+As noted the default setup is to load the Material icons and the Roboto font from fonts.googleapis.com.
+
+They're pulled in via `@font-face` definitions in the two stylesheets pulled in by `src/index.html`:
+
+* https://fonts.googleapis.com/icon?family=Material+Icons
+* https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap
+
+When you request these files Google looks at your user-agent header and serves back CSS that uses TTF, WOFF or WOFF2 depending on how modern your browser is.
+
+According to caniuse.com [@font-face: WOFF2](https://caniuse.com/#feat=mdn-css_at-rules_font-face_woff_2) is supported by 92% browsers in current use, which is only a little less than the 95% for WOFF and the 96% for TTF.
+
+So I replaces these stylesheets in `src/index.html` with static self-hosted versions that use WOFF2:
+
+    USER_AGENT='User-Agent: AppleWebKit/537.36 Chrome/76.0.3809.100'
+    $ curl -H "$USER_AGENT" 'https://fonts.googleapis.com/icon?family=Material+Icons' > src/assets/css/material-icons.css
+    $ curl -H "$USER_AGENT" 'https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap' > src/assets/css/typeface-roboto.css
+
+Then I removed the non-latin definitions from `src/assets/css/typeface-roboto.css` (as is also done in npm installable [typeface-roboto](https://github.com/KyleAMathews/typefaces/tree/master/packages/roboto)).
+
+And finally I replaced the WOFF2 URLs in `material-icons.css` and `typeface-roboto.css` with self-hosted versions:
+
+    $ curl https://fonts.gstatic.com/s/materialicons/v50/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2 > src/assets/fonts/MaterialIcons-Regular.woff2
+    $ curl https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmSU5fBBc4.woff2 > src/assets/fonts/roboto-latin-300.woff2
+    $ curl https://fonts.gstatic.com/s/roboto/v20/KFOmCnqEu92Fr1Mu4mxK.woff2 > src/assets/fonts/roboto-latin-400.woff2
+    $ curl https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmEU9fBBc4.woff2 > src/assets/fonts/roboto-latin-500.woff2
+
+Note that while the CSS files can reference lots of fonts and icon URLs, these are only fetched if something actually makes use of the relevant CSS rule.
+
+WOFF2 files are _already_ compressed and even the entire Angular icon set comes in at just 60KiB.
+
+For more on fonts and icons see [`fonts-and-icons.md`](fonts-and-icons.md).
+
 Miscellaneous notes
 -------------------
 
