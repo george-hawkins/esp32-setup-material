@@ -5,10 +5,12 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { AccessPointsComponent } from './access-points/access-points.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    AccessPointsComponent
   ],
   imports: [
     BrowserModule,
