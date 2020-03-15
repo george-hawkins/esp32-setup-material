@@ -12,6 +12,9 @@ I used [Angular CLI](https://cli.angular.io/) version 9.0.6:
     Angular CLI: 9.0.6
     Node: 13.11.0
 
+Basic Angular project setup
+---------------------------
+
 You can create a new Angular project with `ng new`. `ng new` has a `--minimal` option, but it's a bit too minimal - in particular it excludes `tslint`.
 
 So I compared two projects created as shown:
@@ -70,6 +73,23 @@ If all has gone well the console should just report:
 
     Angular is running in the development mode. Call enableProdMode() to enable the production mode.
     [WDS] Live Reloading enabled.
+
+Adding Angular Material
+-----------------------
+
+As per the [getting started](https://material.angular.io/guide/getting-started) guide:
+
+    $ ng add @angular/material
+
+When asked, I selected Indigo/Pink as the theme, selected yes for Angular Material typography and yes for browser animations.
+
+Then for a basic start, I added a Material toolbar as per the [toolbar](https://material.angular.io/components/toolbar) documentation.
+
+Then I generated a new component:
+
+    $ ng generate component access-points
+
+And updated the generated skeleton files to display a clickable list of (dummy) access points (and log to the console when an item in the list is clicked).
 
 Miscellaneous notes
 -------------------
