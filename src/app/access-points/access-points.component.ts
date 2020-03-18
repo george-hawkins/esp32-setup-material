@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
+import { MatDialog } from '@angular/material/dialog';
+
 import { AccessPointsService } from '../access-points.service';
 import { AccessPoint } from '../AccessPoint';
+import { AuthDialogComponent } from '../auth-dialog/auth-dialog.component';
 
 @Component({
   selector: 'app-access-points',
@@ -11,14 +14,21 @@ import { AccessPoint } from '../AccessPoint';
 export class AccessPointsComponent implements OnInit {
   points: AccessPoint[];
 
-  constructor(private accessPointsService: AccessPointsService) { }
+  constructor(public dialog: MatDialog, private accessPointsService: AccessPointsService) { }
 
   ngOnInit(): void {
     this.getAccessPoints();
   }
 
-  connect(point: AccessPoint): void {
-    console.log('Selected', point);
+  openDialog(point: AccessPoint): void {
+    let dialogRef = this.dialog.open(AuthDialogComponent, {
+      width: '250px',
+      data: point
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result ? `The result was ${result}` : 'Nothing was entered');
+    });
   }
 
   getAccessPoints(): void {

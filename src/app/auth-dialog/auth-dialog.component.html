@@ -1,1 +1,13 @@
-<p>auth-dialog works!</p>
+<form>
+  <h1 mat-dialog-title>{{data.ssid}}</h1>
+  <div mat-dialog-content>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input matInput name="password" [(ngModel)]="password" cdkFocusInitial>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button type="button" (click)="onCancel()">CANCEL</button>
+    <button mat-button type="submit" [mat-dialog-close]="password">CONNECT</button>
+  </div>
+</form>

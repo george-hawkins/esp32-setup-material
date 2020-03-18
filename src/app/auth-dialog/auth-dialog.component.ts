@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AccessPoint } from '../AccessPoint';
 
 @Component({
   selector: 'app-auth-dialog',
@@ -6,10 +8,17 @@ import { Component, OnInit } from '@angular/core';
   styles: []
 })
 export class AuthDialogComponent implements OnInit {
+  password: string;
 
-  constructor() { }
+  constructor(
+    public dialogRef: MatDialogRef<AuthDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: AccessPoint
+  ) { }
 
   ngOnInit(): void {
   }
 
+  onCancel(): void {
+    this.dialogRef.close();
+  }
 }
