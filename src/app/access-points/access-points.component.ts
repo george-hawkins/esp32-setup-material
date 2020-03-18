@@ -22,7 +22,8 @@ export class AccessPointsComponent implements OnInit {
   }
 
   getAccessPoints(): void {
+    // Subscribe for access points and sort them by SSID when received.
     this.accessPointsService.getAccessPoints()
-      .subscribe(points => this.points = points);
+      .subscribe(points => this.points = points.sort((a, b) => a.ssid.localeCompare(b.ssid)));
   }
 }
