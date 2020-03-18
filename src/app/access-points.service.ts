@@ -3,7 +3,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, map } from 'rxjs/operators';
+
+import { AccessPoint } from './AccessPoint';
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +15,12 @@ export class AccessPointsService {
 
   constructor(private http: HttpClient) { }
 
-  getAccessPoints(): Observable<string[][]> {
+  getAccessPoints(): Observable<AccessPoint[]> {
     return this.http.get<string[][]>(this.accessPointsUrl)
       .pipe(
-        tap(_ => console.log('Retrieved access points.')),
-        catchError(this.handleError<string[][]>('getAccessPoints', []))
+        map(points => points.map(p => new AccessPoint(p[0], p[1]))),
+        tap(points => console.log(`Retrieved ${points.length} access points.`)),
+        catchError(this.handleError<AccessPoint[]>('getAccessPoints', []))
       )
   }
 

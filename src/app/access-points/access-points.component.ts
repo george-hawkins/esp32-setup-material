@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+
 import { AccessPointsService } from '../access-points.service';
+import { AccessPoint } from '../AccessPoint';
 
 @Component({
   selector: 'app-access-points',
@@ -7,7 +9,7 @@ import { AccessPointsService } from '../access-points.service';
   styles: []
 })
 export class AccessPointsComponent implements OnInit {
-  points: string[][];
+  points: AccessPoint[];
 
   constructor(private accessPointsService: AccessPointsService) { }
 
@@ -15,7 +17,7 @@ export class AccessPointsComponent implements OnInit {
     this.getAccessPoints();
   }
 
-  connect(point: string[]): void {
+  connect(point: AccessPoint): void {
     console.log('Selected', point);
   }
 
