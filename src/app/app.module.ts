@@ -10,11 +10,13 @@ import { MatListModule } from '@angular/material/list';
 
 import { AppComponent } from './app.component';
 import { AccessPointsComponent } from './access-points/access-points.component';
+import { AuthDialogComponent } from './auth-dialog/auth-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AccessPointsComponent
+    AccessPointsComponent,
+    AuthDialogComponent
   ],
   imports: [
     HttpClientModule,
