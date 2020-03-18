@@ -2,3 +2,12 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* https://stackoverflow.com/a/47152748/245602 */
+.app-toolbar {
+    position: sticky;
+    position: -webkit-sticky; /* For macOS/iOS Safari */
+    top: 0; /* Sets the sticky toolbar to be on top */
+    z-index: 100; /* Ensure that your app's content doesn't overlap the toolbar */
+    /* Note: Angular dialogs have a z-index of 1000 so this should have a _lower_ value. */
+}
