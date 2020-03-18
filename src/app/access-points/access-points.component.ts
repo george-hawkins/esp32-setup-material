@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AccessPointsService } from '../access-points.service';
 
 @Component({
   selector: 'app-access-points',
@@ -6,18 +7,20 @@ import { Component, OnInit } from '@angular/core';
   styles: []
 })
 export class AccessPointsComponent implements OnInit {
-  points: string[][] = [
-    [ 'Alpha', '0123' ],
-    [ 'Beta', '4567' ],
-    [ 'Gamma', '89ab' ]
-  ];
+  points: string[][];
 
-  constructor() { }
+  constructor(private accessPointsService: AccessPointsService) { }
 
   ngOnInit(): void {
+    this.getAccessPoints();
   }
 
   connect(point: string[]): void {
     console.log('Selected', point);
+  }
+
+  getAccessPoints(): void {
+    this.accessPointsService.getAccessPoints()
+      .subscribe(points => this.points = points);
   }
 }
