@@ -142,6 +142,17 @@ WOFF2 files are _already_ compressed and even the entire Angular icon set comes 
 
 For more on fonts and icons see [`fonts-and-icons.md`](fonts-and-icons.md).
 
+Form creation
+-------------
+
+Adding validation requirements to an input field is easy:
+
+    <input matInput required minlength="8" ...>
+
+However it took me quite some time to work out that for the validation to work the field _must_ be named:
+
+    <input matInput name="password" required minlength="8" ...>
+
 Miscellaneous notes
 -------------------
 

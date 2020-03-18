@@ -1,13 +1,13 @@
-<form>
+<form #authForm="ngForm">
   <h1 mat-dialog-title>{{data.ssid}}</h1>
   <div mat-dialog-content>
     <mat-form-field>
       <mat-label>Password</mat-label>
-      <input matInput name="password" [(ngModel)]="password" cdkFocusInitial>
+      <input matInput name="password" required minlength="8" [(ngModel)]="password" cdkFocusInitial>
     </mat-form-field>
   </div>
   <div mat-dialog-actions>
     <button mat-button type="button" (click)="onCancel()">CANCEL</button>
-    <button mat-button type="submit" [mat-dialog-close]="password">CONNECT</button>
+    <button mat-button type="submit" [disabled]="authForm.invalid" [mat-dialog-close]="password">CONNECT</button>
   </div>
 </form>
