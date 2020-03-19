@@ -33,6 +33,7 @@ export class AccessPointsComponent implements OnInit {
 
   getAccessPoints(): void {
     // Subscribe for access points and sort them by SSID when received.
+    // Nomally Android displays SSIDs sorted by RSSI but as of MicroPython 1.12 RSSI is not available for the ESP32 port.
     this.accessPointsService.getAccessPoints()
       .subscribe(points => this.points = points.sort((a, b) => a.ssid.localeCompare(b.ssid)));
   }

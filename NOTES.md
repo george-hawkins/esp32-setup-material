@@ -155,6 +155,8 @@ However it took me quite some time to work out that for the validation to work t
 
 Toggling the visibility of the entered password is easy. There are many complex solutions floating around on the web, but Ole Ersoy demonstrates a super simple approach in his ["Angular Material Password Field With Visibility Toggle"](https://link.medium.com/z4h8YHrpZ4) blog post. There's an even simpler approach if you use a checkbox (which is actually used in the Android 9 WiFi connection dialog) as described by Jeremy Elbourn in his comment on Material Design GitHub issue [#1940](https://github.com/angular/components/issues/1940#issuecomment-262106389).
 
+I added a WiFi icon and a lock icon for each SSID. Currently these are just for show. Ideally we could retrieve the RSSI value and the authentication required for SSID, but as of MicroPython 1.12 this information is not availble for the ESP32 port (though the documentation suggests it may be available for other ports).
+
 Miscellaneous notes
 -------------------
 
