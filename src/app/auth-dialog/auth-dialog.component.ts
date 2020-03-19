@@ -9,6 +9,7 @@ import { AccessPoint } from '../AccessPoint';
 })
 export class AuthDialogComponent implements OnInit {
   password: string;
+  hide = true;
 
   constructor(
     public dialogRef: MatDialogRef<AuthDialogComponent>,
