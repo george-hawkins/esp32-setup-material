@@ -3,7 +3,14 @@
   <div mat-dialog-content>
     <mat-form-field>
       <mat-label>Password</mat-label>
-      <input matInput name="password" required minlength="8" [type]="hide ? 'password' : 'text'" [(ngModel)]="password" cdkFocusInitial>
+      <!-- Disable all text entry "cleverness" - https://stackoverflow.com/questions/254712/disable-spell-checking-on-html-textfields -->
+      <input matInput
+        name="password"
+        autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" 
+        required minlength="8"
+        [type]="hide ? 'password' : 'text'"
+        [(ngModel)]="password"
+        cdkFocusInitial>
       <!-- Controlling visibility - https://link.medium.com/z4h8YHrpZ4 -->
       <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
     </mat-form-field>
