@@ -157,6 +157,8 @@ Toggling the visibility of the entered password is easy. There are many complex 
 
 I added a WiFi icon and a lock icon for each SSID. Currently these are just for show. Ideally we could retrieve the RSSI value and the authentication required for SSID, but as of MicroPython 1.12 this information is not availble for the ESP32 port (though the documentation suggests it may be available for other ports).
 
+The `type` of `button` elements is `submit` by default, this caused me a lot of confusion as I didn't set the `type` attribute for the CANCEL and CONNECT buttons in my dialog initially. When I found that pressing return caused the dialog to close even if a valid password hadn't been entered I tried setting the `type` of the CONNECT button to `submit` but this changed nothing. It turned out pressing return was triggering CANCEL and the way to disable this was to explicitly set its type to `button`.
+
 Miscellaneous notes
 -------------------
 

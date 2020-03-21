@@ -26,9 +26,24 @@ export class AccessPointsComponent implements OnInit {
       data: point
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(result ? `The result was ${result}` : 'Nothing was entered');
-    });
+    dialogRef.afterClosed().subscribe(password => this.onClosed(point, password));
+  }
+
+  private onClosed(point: AccessPoint, password: string) {
+    if (password === undefined) {
+      console.log('Nothing was entered.');
+      return;
+    }
+    console.log('Attempting to connect to', point.ssid);
+
+    this.connect(point, password);
+  }
+
+  private connect(point: AccessPoint, password: string): void {
+    this.accessPointsService.connect(point, password)
+      .subscribe(response => {
+        console.log('Connect response (at component level):', response);
+      });
   }
 
   getAccessPoints(): void {
