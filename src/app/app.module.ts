@@ -19,12 +19,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { AppComponent } from './app.component';
 import { AccessPointsComponent } from './access-points/access-points.component';
 import { AuthDialogComponent } from './auth-dialog/auth-dialog.component';
+import { ResultDialogComponent } from './result-dialog/result-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AccessPointsComponent,
-    AuthDialogComponent
+    AuthDialogComponent,
+    ResultDialogComponent
   ],
   imports: [
     FormsModule,
