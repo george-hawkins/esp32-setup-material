@@ -1,5 +1,5 @@
 <mat-action-list>
-  <button *ngFor="let point of points" mat-list-item (click)="openDialog(point)">
+  <button *ngFor="let point of points" mat-list-item (click)="openAuthDialog(point)">
     <!-- The signal strength and lock icon are just for show. -->
     <mat-icon>wifi</mat-icon>
     <span class="left-pad-16">{{point.ssid}}</span>

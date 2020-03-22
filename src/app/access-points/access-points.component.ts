@@ -3,8 +3,14 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { AccessPointsService } from '../access-points.service';
-import { AccessPoint } from '../AccessPoint';
 import { AuthDialogComponent } from '../auth-dialog/auth-dialog.component';
+import { ResultDialogComponent } from '../result-dialog/result-dialog.component';
+
+import { AccessPoint } from '../AccessPoint';
+import { ConnectResponse } from '../ConnectResponse';
+
+// 250px looks narrow on a large screen but is about right for smartphones.
+const DIALOG_WIDTH = '250px';
 
 @Component({
   selector: 'app-access-points',
@@ -20,16 +26,27 @@ export class AccessPointsComponent implements OnInit {
     this.getAccessPoints();
   }
 
-  openDialog(point: AccessPoint): void {
+  openAuthDialog(point: AccessPoint): void {
     let dialogRef = this.dialog.open(AuthDialogComponent, {
-      width: '250px',
+      width: DIALOG_WIDTH,
       data: point
     });
 
-    dialogRef.afterClosed().subscribe(password => this.onClosed(point, password));
+    dialogRef.afterClosed().subscribe(password => this.onAuthClosed(point, password));
   }
 
-  private onClosed(point: AccessPoint, password: string) {
+  private openResultDialog(response: ConnectResponse): void {
+    let dialogRef = this.dialog.open(ResultDialogComponent, {
+      width: DIALOG_WIDTH,
+      data: response
+    });
+
+    dialogRef.afterClosed().subscribe(_0 => {
+      console.log('Result dialog was closed.')
+    });
+  }
+
+  private onAuthClosed(point: AccessPoint, password: string) {
     if (password === undefined) {
       console.log('Nothing was entered.');
       return;
@@ -43,6 +60,7 @@ export class AccessPointsComponent implements OnInit {
     this.accessPointsService.connect(point, password)
       .subscribe(response => {
         console.log('Connect response (at component level):', response);
+        this.openResultDialog(response)
       });
   }
 

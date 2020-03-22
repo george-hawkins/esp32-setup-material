@@ -7,6 +7,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { FormsModule } from '@angular/forms';
 
+import { ClipboardModule } from '@angular/cdk/clipboard'
+
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -33,6 +35,7 @@ import { ResultDialogComponent } from './result-dialog/result-dialog.component';
     HttpClientModule,
     BrowserModule,
     BrowserAnimationsModule,
+    ClipboardModule,
     MatToolbarModule,
     MatListModule,
     MatDialogModule,

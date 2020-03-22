@@ -21,3 +21,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .left-pad-16 {
     padding-left: 16px;
 }
+
+/* mat-form-field defaults to 180px - https://github.com/angular/components/blob/52fea06/src/material/form-field/form-field.scss#L13
+   https://stackoverflow.com/a/54283959/245602
+ */
+.width-100pct {
+    width: 100%;
+}
