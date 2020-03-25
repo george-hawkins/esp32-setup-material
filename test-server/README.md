@@ -37,11 +37,58 @@ To simulate connect to an access point you can post a BSSID and password like so
 
     $ curl -v --data 'bssid=alpha&password=good' localhost:5000/api/access-point
 
-A password containing the word "good" produces a successful `NO_CONTENT` response, one containing "invalid" produces a `BAD_REQUEST` response, one consisting of 3 digits and a description, e.g. "400 my custom error description" produces a response with that status code and description. Any other password value produces a `FORBIDDEN` response.
+A password containing the word "good" produces a successful `OK` response, one containing "invalid" produces a `BAD_REQUEST` response, one consisting of 3 digits and a description, e.g. "400 my custom error description" produces a response with that status code and description. Any other password value produces a `FORBIDDEN` response.
 
 If you have [`jq`](https://stedolan.github.io/jq/) installed you can get more readable output like so:
 
     $ curl -v --data 'bssid=alpha&password=bad' localhost:5000/api/access-point | jq .
+
+Returning JSON
+--------------
+
+Flask is perhaps overly flexible in the number of options it gives you to return something as JSON.
+
+It will automatically converts dicts to JSON:
+
+    @app.route(...)
+    def foo():
+    return { 'alpha': 'beta' }
+
+For any other kind of structure you have to explicitly convert it to a JSON response object:
+
+    return jsonify(my_list)
+
+Both of the above will set the HTTP status code to `200 OK`. For a different status code you can do:
+
+    r = jsonify(my_list)
+    r.status_code = HTTPStatus.FORBIDDEN
+    return r
+
+But Flask also provides a shortcut, where it'll set `status_code` for you, if you return a tuple:
+
+    return (jsonify(my_list), HTTPStatus.FORBIDDEN)
+
+Or for a dict, just:
+
+    return ({ 'alpha': 'beta' }, HTTPStatus.FORBIDDEN)
+
+In a similar fashion you can also use a 3-tuple to additionally set headers:
+
+    return ({ 'alpha': 'beta'}, HTTPStatus.FORBIDDEN, { 'X-gamma': 'epsilon' })
+
+Or a 2-tuplie if you want `200 OK` as the response:
+
+    return ({ 'alpha': 'beta'}, { 'X-gamma': 'epsilon' })
+
+Note: if you need to repeat headers, you'll need to use a [multidict](https://multidict.readthedocs.io/en/stable/).
+
+Under the covers all the real work is being done by [`flask.Flask.make_response`](https://flask.palletsprojects.com/en/1.1.x/api/#flask.Flask.make_response) and you can return the result of this function directly if you want avoid any further Flask post-processing:
+
+    return make_response(({ 'alpha': 'beta'}, HTTPStatus.FORBIDDEN))
+
+As above, you still use tuples with this function (rather than passing in separate arguments for content/response, status and headers).
+
+Note that all of the above approaches correctly set the content-type for JSON.
 
 Notes
 -----
