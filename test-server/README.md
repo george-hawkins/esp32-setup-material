@@ -14,9 +14,10 @@ I created a new Python project with a standard venv:
     $ source env/bin/activate
     $ pip install --upgrade pip
 
-I installed Flask:
+I installed Flask and [APScheduler](https://apscheduler.readthedocs.io/en/stable/userguide.html):
 
     $ pip install Flask
+    $ pip install apscheduler
 
 Using the Flask [quickstart guide](https://flask.palletsprojects.com/en/1.1.x/quickstart/) I created `server.py`.
 
@@ -42,6 +43,21 @@ A password containing the word "good" produces a successful `OK` response, one c
 If you have [`jq`](https://stedolan.github.io/jq/) installed you can get more readable output like so:
 
     $ curl -v --data 'bssid=alpha&password=bad' localhost:5000/api/access-point | jq .
+
+You can test the keep-alive functionality like so:
+
+    $ while true
+    do
+        curl --data 'timeout=2000' localhost:5000/api/alive
+        echo -n .
+        sleep 1
+    done
+
+While this look runs the server will just report the `POST` requests happening every second but when you kill the loop, the server will report:
+
+    Keep-alive timeout expired.
+
+A non-test version of the server would exit at this point but this test-server just keeps running.
 
 Returning JSON
 --------------

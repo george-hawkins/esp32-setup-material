@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from http.server import BaseHTTPRequestHandler
 from http import HTTPStatus
 from random import randrange
@@ -10,6 +11,11 @@ from flask import abort
 from flask import request
 
 from werkzeug.exceptions import HTTPException
+
+from apscheduler.schedulers.background import BackgroundScheduler
+
+scheduler = BackgroundScheduler()
+scheduler.start()
 
 # The underlying handler still defaults to HTTP/1.0.
 BaseHTTPRequestHandler.protocol_version = "HTTP/1.1"
@@ -51,6 +57,31 @@ def access_point():
             abort(status, description)
         else:
             abort(HTTPStatus.FORBIDDEN)
+
+
+# If a client specifies a keep-alive period of Xms then they must ping again with Xms plus a fixed "tolerance".
+TOLERANCE = 500
+
+timeout_job = None
+
+
+def timed_out():
+    global timeout_job
+    timeout_job = None
+    # At this point a non-test server would exit.
+    print("Keep-alive timeout expired.")
+
+
+@app.route("/api/alive", methods=["POST"])
+def alive():
+    timeout = int(request.form["timeout"]) + TOLERANCE
+    fire_at = datetime.now() + timedelta(milliseconds=timeout)
+    global timeout_job
+    if timeout_job:
+        timeout_job.reschedule('date', run_date=fire_at)
+    else:
+        timeout_job = scheduler.add_job(timed_out, 'date', run_date=fire_at)
+    return "", HTTPStatus.NO_CONTENT
 
 
 @app.errorhandler(HTTPException)
