@@ -1,12 +1,12 @@
 <div mat-dialog-content>
   <div>Your device has been connected to <b>{{data.point.ssid}}</b>.</div> <!-- Using 'p' rather than 'div' results in a large gap between this element and the next. -->
   <mat-form-field class="width-100pct">
-    <input matInput readonly value="{{address}}">
+    <input matInput readonly value="{{data.message}}">
     <button mat-icon-button matSuffix> <!-- Without the button element there's no visual confirmation that you pressed the copy icon. -->
-      <mat-icon [cdkCopyToClipboard]="address">content_copy</mat-icon>
+      <mat-icon [cdkCopyToClipboard]="data.message">content_copy</mat-icon>
     </button>
   </mat-form-field>
-  <p>Click OK to shutdown this hotspot and return to your usual network.</p> <!-- Returning to your usual network _should_ happen automatically. -->
+  <p>Click OK to finish and return to your usual network.</p> <!-- Returning to your usual network _should_ happen automatically when the temporary hotspot is shutdown. -->
 </div>
 <mat-dialog-actions align="center"> <!-- "align" isn't an HTML5 attribute but it is a Material one - https://material.angular.io/components/dialog/overview#dialog-content -->
   <button mat-button type="submit" mat-dialog-close cdkFocusInitial>OK</button>

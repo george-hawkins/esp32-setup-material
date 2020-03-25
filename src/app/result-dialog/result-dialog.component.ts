@@ -8,7 +8,6 @@ import { ConnectResponse } from '../ConnectResponse';
   styles: []
 })
 export class ResultDialogComponent implements OnInit {
-  address = "192.168.0." + Math.floor(Math.random() * Math.floor(256))
 
   constructor(
     public dialogRef: MatDialogRef<ResultDialogComponent>,

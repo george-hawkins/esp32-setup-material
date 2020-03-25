@@ -23,7 +23,7 @@ export class AccessPointsService {
     const params = new HttpParams().set('bssid', point.bssid).set('password', password)
     return this.http.post<any>(this.connectUrl, params).pipe(
       tap(response => console.log('Connect response:', response)),
-      map(_0 => new ConnectResponse(point, ConnectStatus.SUCCESS)), // Note: Lodash "owns" the single underscore.
+      map(response => new ConnectResponse(point, ConnectStatus.SUCCESS, response.message)),
       catchError(error => this.connectError(point, error))
     );
   }
