@@ -1,16 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogState, MatDialogRef } from '@angular/material/dialog';
 
 import { AccessPointsService } from '../access-points.service';
 import { AuthDialogComponent } from '../auth-dialog/auth-dialog.component';
 import { ResultDialogComponent } from '../result-dialog/result-dialog.component';
 
 import { AccessPoint } from '../AccessPoint';
-import { ConnectResponse } from '../ConnectResponse';
+import { ConnectResponse, ConnectStatus } from '../ConnectResponse';
+import { timer } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 
 // 250px looks narrow on a large screen but is about right for smartphones.
 const DIALOG_WIDTH = '250px';
+
+const KEEP_ALIVE_INTERVAL = 2000; // 2s.
 
 @Component({
   selector: 'app-access-points',
@@ -41,12 +45,32 @@ export class AccessPointsComponent implements OnInit {
       data: response
     });
 
+    if (response.status == ConnectStatus.SUCCESS) {
+      this.keepAlive(dialogRef);
+    }
+
     dialogRef.afterClosed().subscribe(_0 => {
-      console.log('Result dialog was closed.')
+      // TODO: in the case of success consider making the access-point list disabled of dialog close.
+      // The best you seem to be able to do is https://stackoverflow.com/a/58121075/245602 - as noted
+      // this doesn't disable tabbing etc. but doing so is too much trouble for too little gain. The
+      // disabled effect in this answer seems to be almost a standard (it appears in many SO answers).
+      // Some people also add 'cursor: not-allowed;'
+      console.log('Result dialog was closed.');
     });
   }
 
-  private onAuthClosed(point: AccessPoint, password: string) {
+  // Start a timer that repeatedly tells the backend to stay alive (until the dialog is closed).
+  private keepAlive(dialogRef: MatDialogRef<ResultDialogComponent>): void {
+    // The dialog state immediately becomes OPEN (you don't have to subscribe for afterOpened).
+    timer(0, KEEP_ALIVE_INTERVAL).pipe(
+      takeWhile(_0 => dialogRef.getState() == MatDialogState.OPEN)
+    ).subscribe(() => {
+      this.accessPointsService.keepAlive(KEEP_ALIVE_INTERVAL)
+        .subscribe(_0 => { }); // Without a subscribe the underlying request doesn't happen.
+    });
+  }
+
+  private onAuthClosed(point: AccessPoint, password: string): void {
     if (password === undefined) {
       console.log('Nothing was entered.');
       return;

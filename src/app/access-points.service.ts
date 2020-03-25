@@ -16,6 +16,7 @@ const FORBIDDEN = 403;
 export class AccessPointsService {
   private accessPointsUrl = '/api/access-points';
   private connectUrl = '/api/access-point';
+  private aliveUrl = '/api/alive';
 
   constructor(private http: HttpClient) { }
 
@@ -32,12 +33,13 @@ export class AccessPointsService {
     if (error.status == FORBIDDEN) {
       return of(new ConnectResponse(point, ConnectStatus.FAILURE));
     } else {
-      console.error('Error details:', error);
       // Depending on the level at which the error was generated HttpErrorResponse.error may
       // contain more useful information than HttpErrorResponse.message. However message is
       // always a string whereas message may be anything, e.g. a plain string or structured data.
-      return of(new ConnectResponse(point, ConnectStatus.UNEXPECTED_FAILURE, error.message));
-      }
+      const response = new ConnectResponse(point, ConnectStatus.UNEXPECTED_FAILURE, error.message);
+
+      return this.handleError<ConnectResponse>('connect', response)(error)
+    }
   }
 
   getAccessPoints(): Observable<AccessPoint[]> {
@@ -49,11 +51,20 @@ export class AccessPointsService {
       )
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error('Error details:', error);
+  keepAlive(millis: number): Observable<boolean> {
+    const params = new HttpParams().set('timeout', millis.toString())
+    return this.http.post<any>(this.aliveUrl, params).pipe(
+      // Unlike the other calls, there's no response body and so nothing to log with `tap`.
+      map(_0 => true),
+      catchError(this.handleError<boolean>('keepAlive', false))
+    );
+  }
 
-      // Let the app keep running by returning an empty result.
+  private handleError<T>(operation: string, result?: T) {
+    return (error: any): Observable<T> => {
+      console.error(`${operation} error details`, error);
+
+      // Let the app keep running by returning a defined canned result.
       return of(result as T);
     };
   }
