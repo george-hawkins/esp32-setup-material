@@ -74,6 +74,14 @@ If all has gone well the console should just report:
     Angular is running in the development mode. Call enableProdMode() to enable the production mode.
     [WDS] Live Reloading enabled.
 
+By default the server only listens on the loopback address, to listen on all interfaces so that you can access it from another device:
+
+    $ ng serve --host 0.0.0.0
+
+And to serve a production build:
+
+    $ ng serve --prod
+
 Adding Angular Material
 -----------------------
 
