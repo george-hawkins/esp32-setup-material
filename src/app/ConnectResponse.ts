@@ -10,6 +10,6 @@ export class ConnectResponse {
     constructor(
       readonly point: AccessPoint,
       readonly status: ConnectStatus,
-      readonly message: string = undefined // Details for any low-level failure.
+      readonly message?: string
     ) { }
   }

@@ -8,7 +8,7 @@ import { AccessPoint } from '../AccessPoint';
   styles: []
 })
 export class AuthDialogComponent implements OnInit {
-  password = "";
+  password = '';
   hide = true;
 
   constructor(

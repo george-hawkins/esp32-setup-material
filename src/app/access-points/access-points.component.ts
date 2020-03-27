@@ -31,7 +31,7 @@ export class AccessPointsComponent implements OnInit {
   }
 
   openAuthDialog(point: AccessPoint): void {
-    let dialogRef = this.dialog.open(AuthDialogComponent, {
+    const dialogRef = this.dialog.open(AuthDialogComponent, {
       width: DIALOG_WIDTH,
       data: point
     });
@@ -40,12 +40,12 @@ export class AccessPointsComponent implements OnInit {
   }
 
   private openResultDialog(response: ConnectResponse): void {
-    let dialogRef = this.dialog.open(ResultDialogComponent, {
+    const dialogRef = this.dialog.open(ResultDialogComponent, {
       width: DIALOG_WIDTH,
       data: response
     });
 
-    if (response.status == ConnectStatus.SUCCESS) {
+    if (response.status === ConnectStatus.SUCCESS) {
       this.keepAlive(dialogRef);
     }
 
@@ -63,7 +63,7 @@ export class AccessPointsComponent implements OnInit {
   private keepAlive(dialogRef: MatDialogRef<ResultDialogComponent>): void {
     // The dialog state immediately becomes OPEN (you don't have to subscribe for afterOpened).
     timer(0, KEEP_ALIVE_INTERVAL).pipe(
-      takeWhile(_0 => dialogRef.getState() == MatDialogState.OPEN)
+      takeWhile(_0 => dialogRef.getState() === MatDialogState.OPEN)
     ).subscribe(() => {
       this.accessPointsService.keepAlive(KEEP_ALIVE_INTERVAL)
         .subscribe(_0 => { }); // Without a subscribe the underlying request doesn't happen.
@@ -84,7 +84,7 @@ export class AccessPointsComponent implements OnInit {
     this.accessPointsService.connect(point, password)
       .subscribe(response => {
         console.log('Connect response (at component level):', response);
-        this.openResultDialog(response)
+        this.openResultDialog(response);
       });
   }
 
