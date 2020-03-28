@@ -1,21 +1,13 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConnectResponse, ConnectStatus } from '../ConnectResponse';
 
 @Component({
   selector: 'app-result-dialog',
-  templateUrl: './result-dialog.component.html',
-  styles: []
+  templateUrl: './result-dialog.component.html'
 })
-export class ResultDialogComponent implements OnInit {
+export class ResultDialogComponent {
   connectStatus = ConnectStatus; // Make enum available to HTML template.
 
-  constructor(
-    public dialogRef: MatDialogRef<ResultDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ConnectResponse
-  ) { }
-
-  ngOnInit(): void {
-  }
-
+  constructor(@Inject(MAT_DIALOG_DATA) public data: ConnectResponse) { }
 }

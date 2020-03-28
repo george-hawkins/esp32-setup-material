@@ -21,8 +21,7 @@ const KEEP_ALIVE_INTERVAL = 2000; // 2s.
 
 @Component({
   selector: 'app-access-points',
-  templateUrl: './access-points.component.html',
-  styles: []
+  templateUrl: './access-points.component.html'
 })
 export class AccessPointsComponent implements OnInit {
   points: AccessPoint[];
@@ -51,13 +50,15 @@ export class AccessPointsComponent implements OnInit {
       data: response
     });
 
-    if (response.status === ConnectStatus.SUCCESS) {
+    const success = response.status === ConnectStatus.SUCCESS;
+
+    if (success) {
       this.keepAlive(dialogRef);
     }
 
     dialogRef.afterClosed().subscribe(_0 => {
       console.log('Result dialog was closed.');
-      if (response.status === ConnectStatus.SUCCESS) {
+      if (success) {
         this.aliveService.nextAlive(false);
       }
     });
@@ -70,7 +71,7 @@ export class AccessPointsComponent implements OnInit {
       takeWhile(_0 => dialogRef.getState() === MatDialogState.OPEN)
     ).subscribe(() => {
       this.accessPointsService.keepAlive(KEEP_ALIVE_INTERVAL)
-        .subscribe(_0 => { }); // Without a subscribe the underlying request doesn't happen.
+        .subscribe(); // Without a subscribe the underlying request doesn't happen.
     });
   }
 

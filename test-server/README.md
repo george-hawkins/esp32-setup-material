@@ -82,19 +82,19 @@ Both of the above will set the HTTP status code to `200 OK`. For a different sta
 
 But Flask also provides a shortcut, where it'll set `status_code` for you, if you return a tuple:
 
-    return (jsonify(my_list), HTTPStatus.FORBIDDEN)
+    return jsonify(my_list), HTTPStatus.FORBIDDEN
 
 Or for a dict, just:
 
-    return ({ 'alpha': 'beta' }, HTTPStatus.FORBIDDEN)
+    return { 'alpha': 'beta' }, HTTPStatus.FORBIDDEN
 
 In a similar fashion you can also use a 3-tuple to additionally set headers:
 
-    return ({ 'alpha': 'beta'}, HTTPStatus.FORBIDDEN, { 'X-gamma': 'epsilon' })
+    return { 'alpha': 'beta'}, HTTPStatus.FORBIDDEN, { 'X-gamma': 'epsilon' }
 
-Or a 2-tuplie if you want `200 OK` as the response:
+Or a 2-tuple if you want `200 OK` as the response:
 
-    return ({ 'alpha': 'beta'}, { 'X-gamma': 'epsilon' })
+    return { 'alpha': 'beta'}, { 'X-gamma': 'epsilon' }
 
 Note: if you need to repeat headers, you'll need to use a [multidict](https://multidict.readthedocs.io/en/stable/).
 
@@ -118,5 +118,5 @@ If you were serious about building a REST API with Python you _might_ be better 
 Notes:
 
 * All three use flask under the covers.
-* flask-restx has relatively few star but this is a consequence of its rececent history - its a fork of flask-restplus (an earlier and no longer maintained fork of flask-restful).
+* flask-restx has relatively few stars but this is a consequence of its rececent history - its a fork of flask-restplus (an earlier and no longer maintained fork of flask-restful).
 * flask-restful and flask-restx are lightweight additions to flask whereas eve is more heavyweight and pulls in a dependency on [mongoDB](https://docs.mongodb.com/manual/introduction/).

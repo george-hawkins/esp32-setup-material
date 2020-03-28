@@ -12,4 +12,4 @@ export class ConnectResponse {
       readonly status: ConnectStatus,
       readonly message?: string
     ) { }
-  }
+}

@@ -43,7 +43,7 @@ def access_point():
     password = request.form["password"]
     print("Received request to connect to {} with password \"{}\"".format(bssid, password))
     # Use the password to specify the response you want:
-    # * If it contains "good" the success response OK is returned.
+    # * If it contains "good" OK is returned.
     # * If it contains "invalid" BAD_REQUEST is returned.
     # * If it consists of 3 digits, a space and some text then they're returned as the status code and description.
     # * Otherwise FORBIDDEN is returned.
@@ -72,7 +72,7 @@ timeout_job = None
 def timed_out():
     global timeout_job
     timeout_job = None
-    # At this point a non-test server would exit.
+    # At this point a non-test server would shutdown.
     print("Keep-alive timeout expired.")
 
 
