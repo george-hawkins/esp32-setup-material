@@ -29,6 +29,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     width: 100%;
 }
 
+/* p normally has a margin-bottom of 12px, which is too much if followed by e.g. certain form fields. */
+.bottom-margin-0 {
+    margin-bottom: 0 !important;
+}
+
 /* There are no end of CSS solutions for centering, this seems to be the "modern" way.
    https://www.w3.org/Style/Examples/007/center.en.html
  */

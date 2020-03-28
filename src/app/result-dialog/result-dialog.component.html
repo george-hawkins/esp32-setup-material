@@ -1,6 +1,6 @@
 <div mat-dialog-content [ngSwitch]="data.status">
   <div *ngSwitchCase="connectStatus.SUCCESS">
-    <div>Your device has been connected to <b>{{data.point.ssid}}</b>.</div> <!-- Using 'p' rather than 'div' results in a large gap between this element and the next. -->
+    <p class="bottom-margin-0">Your device has been connected to <b>{{data.point.ssid}}</b>.</p>
     <mat-form-field class="width-100pct">
       <input matInput readonly value="{{data.message}}">
       <button mat-icon-button matSuffix> <!-- Without the button element there's no visual confirmation that you pressed the copy icon. -->
