@@ -3,11 +3,14 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogState, MatDialogRef } from '@angular/material/dialog';
 
 import { AccessPointsService } from '../access-points.service';
+import { AliveService } from '../alive.service';
+
 import { AuthDialogComponent } from '../auth-dialog/auth-dialog.component';
 import { ResultDialogComponent } from '../result-dialog/result-dialog.component';
 
 import { AccessPoint } from '../AccessPoint';
 import { ConnectResponse, ConnectStatus } from '../ConnectResponse';
+
 import { timer } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 
@@ -24,7 +27,10 @@ const KEEP_ALIVE_INTERVAL = 2000; // 2s.
 export class AccessPointsComponent implements OnInit {
   points: AccessPoint[];
 
-  constructor(public dialog: MatDialog, private accessPointsService: AccessPointsService) { }
+  constructor(
+    public dialog: MatDialog,
+    private accessPointsService: AccessPointsService,
+    private aliveService: AliveService) { }
 
   ngOnInit(): void {
     this.getAccessPoints();
@@ -50,12 +56,10 @@ export class AccessPointsComponent implements OnInit {
     }
 
     dialogRef.afterClosed().subscribe(_0 => {
-      // TODO: in the case of success consider making the access-point list disabled of dialog close.
-      // The best you seem to be able to do is https://stackoverflow.com/a/58121075/245602 - as noted
-      // this doesn't disable tabbing etc. but doing so is too much trouble for too little gain. The
-      // disabled effect in this answer seems to be almost a standard (it appears in many SO answers).
-      // Some people also add 'cursor: not-allowed;'
       console.log('Result dialog was closed.');
+      if (response.status === ConnectStatus.SUCCESS) {
+        this.aliveService.nextAlive(false);
+      }
     });
   }
 

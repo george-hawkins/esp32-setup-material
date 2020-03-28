@@ -28,3 +28,14 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .width-100pct {
     width: 100%;
 }
+
+/* There are no end of CSS solutions for centering, this seems to be the "modern" way.
+   https://www.w3.org/Style/Examples/007/center.en.html
+ */
+.center-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
+}
