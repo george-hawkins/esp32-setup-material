@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from http.server import BaseHTTPRequestHandler
 from http import HTTPStatus
-from random import randrange
+from random import randrange, randint, sample
 from re import match
 
 from flask import Flask
@@ -27,7 +27,11 @@ APPLICATION_JSON = app.config["JSONIFY_MIMETYPE"]
 
 @app.route("/api/access-points", methods=["GET"])
 def access_points():
-    return jsonify(_AP_LIST)
+    upper = len(_AP_LIST)
+    lower = upper // 2
+    size = randint(lower, upper)
+    # Return a random sample of elements from _AP_LIST.
+    return jsonify(sample(_AP_LIST, size))
 
 
 _AP_LIST = [["George Hawkins AC", "788a20498c26"], ["UPC Wi-Free", "3a431d3e4ec7"], ["Salt_2GHz_8A9F85", "44fe3b8a9f87"], ["SiCo's", "d8fb5eac6d50"], ["SiCo's Ospiti", "d8fb5eac6d51"], ["Sonja's iPhone", "f249bec2ec94"], ["JB_40", "488d36d5c83a"], ["jonas-guest", "488d36d5c83b"], ["UPC73A7C75", "ac2205767bb4"], ["UPC Wi-Free", "ae2215767bb4"], ["UPC Wi-Free", "925c14cbe5d9"], ["Salt_2GHz_FC5BC1", "44fe3bfc5bc3"], ["UPC7E68DDA", "905c44cbe5d9"], ["Mattinet2", "e0469a684727"], ["jonas-guest", "a0648f3663b1"], ["gurke", "6466b31646e5"], ["uVoPiC", "5467512dbbf6"]]
@@ -59,7 +63,7 @@ def access_point():
             abort(HTTPStatus.FORBIDDEN)
 
 
-# If a client specifies a keep-alive period of Xms then they must ping again with Xms plus a fixed "tolerance".
+# If a client specifies a keep-alive period of Xms then they must ping again within Xms plus a fixed "tolerance".
 TOLERANCE = 500
 
 timeout_job = None
