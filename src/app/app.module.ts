@@ -16,6 +16,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatRippleModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AppComponent } from './app.component';
@@ -43,6 +44,7 @@ import { ResultDialogComponent } from './result-dialog/result-dialog.component';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatRippleModule,
     MatProgressSpinnerModule
   ],
   providers: [],
