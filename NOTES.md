@@ -82,6 +82,14 @@ And to serve a production build:
 
     $ ng serve --prod
 
+To update everything to the latest releases:
+
+    $ ng update --all
+
+To check if there's anything left to update:
+
+    $ npm outdated
+
 Adding Angular Material
 -----------------------
 
