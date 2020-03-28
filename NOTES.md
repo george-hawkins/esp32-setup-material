@@ -25,11 +25,11 @@ So I compared two projects created as shown:
 
 And on the basis of this created a new project like so:
 
-    $ ng new --routing=false --style=css --skip-install --skip-tests --directory esp32-setup-material esp32-setup
+    $ ng new --routing=false --style=css --skip-install --skip-tests --directory wifi-setup-material wifi-setup
 
 And set about minimizing it:
 
-    $ cd esp32-setup-material
+    $ cd wifi-setup-material
     $ git rm -r .editorconfig e2e karma.conf.js src/test.ts tsconfig.spec.json src/app/app.component.html
     $ git commit -m 'Removed test related resources, .editorconfig and the getting-started app.component.html content.'
 
@@ -114,9 +114,9 @@ To build a set of files suitable for production deployment:
 
     $ ng build --prod
 
-The result ends up in `dist/esp32-setup`. To quickly test them out without any backend:
+The result ends up in `dist/wifi-setup`. To quickly test them out without any backend:
 
-    $ cd dist/esp32-setup
+    $ cd dist/wifi-setup
     $ python3 -m http.server
 
 And open http://localhost:8000/ in your browser.

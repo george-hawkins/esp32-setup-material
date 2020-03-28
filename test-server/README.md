@@ -1,5 +1,5 @@
-ESP32 setup - test server
-=========================
+WiFi setup - test server
+========================
 
 Normally you'd test an Angular project against a [Node.js](https://nodejs.org/en/about/) server. But as we plan to use this project with a MicroPython server, I've gone with a Python [Flask](https://flask.palletsprojects.com/) based server.
 

@@ -1,5 +1,5 @@
-ESP32 setup material
-====================
+WiFi setup material
+===================
 
 This project contains the [Angular](https://angular.io/) and [Angular Material](https://material.angular.io/guide/getting-started) resources that are meant to accompany my [ESP32 setup](https://github.com/george-hawkins/esp32-setup) project.
 

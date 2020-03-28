@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "esp32-setup": {
+    "wifi-setup": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:class": {
@@ -38,7 +38,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/esp32-setup",
+            "outputPath": "dist/wifi-setup",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -88,19 +88,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "esp32-setup:build",
+            "browserTarget": "wifi-setup:build",
             "proxyConfig": "src/proxy.conf.json"
           },
           "configurations": {
             "production": {
-              "browserTarget": "esp32-setup:build:production"
+              "browserTarget": "wifi-setup:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "esp32-setup:build"
+            "browserTarget": "wifi-setup:build"
           }
         },
         "lint": {
@@ -117,5 +117,5 @@
       }
     }
   },
-  "defaultProject": "esp32-setup"
+  "defaultProject": "wifi-setup"
 }
