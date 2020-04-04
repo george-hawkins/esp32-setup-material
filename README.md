@@ -151,6 +151,11 @@ Open a new terminal session or just force a reload of `~/.bashrc` like so:
     $ exec $SHELL
 
 Determine the latest Python version number [here](https://www.python.org/downloads/) and install it like so:
+List all the Python versions that `pyenv` knows:
+
+    $ pyenv install --list
+
+There are various Python variants, e.g. `anaconda`, `miniconda`, `pypy` and `stackless`. There's even `micropython`. But just look at the plain version numbers, e.g. `3.8.2`, choose the latest one and install it:
 
     $ pyenv install 3.8.2
 
@@ -159,3 +164,12 @@ It takes a while but once it's installed, set it as the version to use and check
     $ pyenv global 3.8.2
     $ python --version
     Python 3.8.2
+
+Note that `pyenv` doesn't retrieve a list of known Python versions, it just has a static set that it knows about. You can see that set like so:
+
+    $ ls ~/.pyenv/plugins/python-build/share
+    2.1.3    3.1.1    3.5.9    anaconda-2.0.1    anaconda3-4.3.1    ...
+
+Oddly `pyenv` doesn't have a command to update its known versions. So if newer Python versions have been released since you installed `pyenv`, you have to manually update it like so:
+
+    $ cd ~/.pyenv && git pull && cd -
