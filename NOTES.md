@@ -228,3 +228,63 @@ Over time there have been various ways to pull these into your Angular project, 
 Note: the Angular build process uses [postcss-import](https://github.com/postcss/postcss-import) to process these import statements and inline the referenced CSS. If you're wondering at the long explicit path for `material-design-icons` vs the much shorter import for `typeface-roboto`, it's because postcss-import can find the CSS file automatically if the package has a particular expected structure - `typeface-roboto` has this structure and `material-design-icons` does not.
 
 In the end though I went with a simpler but more mechanical approach to all this, that's covered up above.
+
+ng build and es5
+----------------
+
+Try the following:
+
+    $ ng new --routing=false --style=css --minimal foo
+    $ cd foo
+    $ ng build --prod
+    Generating ES5 bundles for differential loading...
+    ES5 bundle generation complete.
+
+    chunk {2} polyfills-es2015.bbb42ff2e1c488ff52d5.js (polyfills) 36.1 kB [initial] [rendered]
+    chunk {3} polyfills-es5.0e4e1968447fab48e788.js (polyfills-es5) 129 kB [initial] [rendered]
+    ...
+    chunk {1} main-es2015.9e7e7292fefbda1ff69e.js (main) 104 kB [initial] [rendered]
+    chunk {1} main-es5.9e7e7292fefbda1ff69e.js (main) 125 kB [initial] [rendered]
+
+As you can see it builds `.js` files for es5 (around since 2009) and es2015 (around since 2015, obviously), i.e. the 5th and 6th versions of JavaScript (technically ECMAScript, hence the "es"). The es5 files more than double the size of the build.
+
+The [`browserslist`](browserslist) file here determines the browsers for which the generated JavaScript has to be compatible. The file uses a query language (described [here](https://github.com/browserslist/browserslist#queries)) to specify the relevant browsers. You can see which browsers are selected by the current `browserslist` file like so:
+
+    $ npx browserslist
+    and_chr 80
+    and_ff 68
+    android 80
+    ...
+
+There's no simple way to determine which ones are pulling in the need for es5. So using a minimal project, like the one just created above, I determined it by brute force like so:
+
+    $ rm -rf dist/foo
+    $ cp browserslist browserslist.bak
+    $ npx browserslist > browserslist.expanded
+    $ j=1; while read line
+    do
+        echo "$line" > browserslist
+        echo "$j $line"
+        ng build --prod
+        mv dist/foo $dist/j
+        let j++
+    done < browserslist.expanded
+    $ du -h dist/* | sort -n
+    172K    dist/1
+    172K    dist/10
+    ...
+    440K    dist/4
+    440K    dist/6
+
+Then I related the number `4`, `6` etc., associated with large directories, with the indexes printed out by the `while` loop.
+
+The resulting list was:
+
+* Internet Explorer
+* Opera Mini and Opera Mobile
+* UC
+* QQ
+* KaiOS
+* Baidu
+
+Updating `browserslist` to exclude these browsers reduced the build size substantially but also excludes about 10% of browser users.

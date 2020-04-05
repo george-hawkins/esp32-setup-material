@@ -94,6 +94,8 @@ To build a set of files suitable for production deployment:
 
     $ ng build --prod
 
+Currently the [`browserlist`](browserlist) file for this project only specifies browsers that support es2015, i.e. a modern version of JavaScript. This includes the latest versions of Chrome, Safari, Firefox and Edge - and their iOS and Android variants - but excludes Internet Explorer and the kind of browsers typically found on feature phones.
+
 **Notes:** for more details about this project and how it was created, see [`NOTES.md`](NOTES.md).
 
 Installing node and npm
