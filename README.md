@@ -20,14 +20,14 @@ So open two terminal sessions, one to run the test server and one to run the fro
 
 ### Running the test server
 
-Before running the test server setup a standard Python [venv](https://docs.python.org/3/tutorial/venv.html):
+Before running the test server, set up a standard Python [venv](https://docs.python.org/3/tutorial/venv.html):
 
     $ cd test-server
     $ python3 -m venv env
     $ source env/bin/activate
     $ pip install --upgrade pip
 
-Once setup, the `source` line is the only one you need to repeat to activate the venv in future terminal sessions.
+Once set up, the `source` line is the only one you need to repeat to activate the venv in future terminal sessions.
 
 Then install [Flask](https://flask.palletsprojects.com/) and [APScheduler](https://apscheduler.readthedocs.io/en/stable/userguide.html):
 
