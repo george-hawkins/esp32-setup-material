@@ -52,8 +52,8 @@ export class AccessPointsService {
       );
   }
 
-  keepAlive(millis: number): Observable<boolean> {
-    const params = new HttpParams().set('timeout', millis.toString());
+  keepAlive(seconds: number): Observable<boolean> {
+    const params = new HttpParams().set('timeout', seconds.toString());
 
     return this.http.post<any>(ALIVE_URL, params).pipe(
       // Unlike the other calls, there's no response body and so nothing to log with `tap`.

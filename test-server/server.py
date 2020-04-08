@@ -65,8 +65,8 @@ def access_point():
             abort(HTTPStatus.FORBIDDEN)
 
 
-# If a client specifies a keep-alive period of Xms then they must ping again within Xms plus a fixed "tolerance".
-TOLERANCE = 500
+# If a client specifies a keep-alive period of Xs then they must ping again within Xs plus a fixed "tolerance".
+TOLERANCE = 1
 
 timeout_job = None
 
@@ -81,7 +81,7 @@ def timed_out():
 @app.route("/api/alive", methods=["POST"])
 def alive():
     timeout = int(request.form["timeout"]) + TOLERANCE
-    fire_at = datetime.now() + timedelta(milliseconds=timeout)
+    fire_at = datetime.now() + timedelta(seconds=timeout)
     global timeout_job
     if timeout_job:
         timeout_job.reschedule('date', run_date=fire_at)

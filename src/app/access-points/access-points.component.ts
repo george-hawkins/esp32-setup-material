@@ -19,13 +19,14 @@ import { takeWhile } from 'rxjs/operators';
 // 250px looks narrow on a large screen but is about right for smartphones.
 const DIALOG_WIDTH = '250px';
 
-const KEEP_ALIVE_INTERVAL = 2000; // 2s.
+const KEEP_ALIVE_INTERVAL = 2; // 2s.
 
 @Component({
   selector: 'app-access-points',
   templateUrl: './access-points.component.html'
 })
 export class AccessPointsComponent implements OnInit {
+  private fetching = false;
   points: AccessPoint[];
 
   constructor(
@@ -70,7 +71,7 @@ export class AccessPointsComponent implements OnInit {
   // Start a timer that repeatedly tells the backend to stay alive (until the dialog is closed).
   private keepAlive(dialogRef: MatDialogRef<ResultDialogComponent>): void {
     // The dialog state immediately becomes OPEN (you don't have to subscribe for afterOpened).
-    timer(0, KEEP_ALIVE_INTERVAL).pipe(
+    timer(0, KEEP_ALIVE_INTERVAL * 1000).pipe(
       takeWhile(_0 => dialogRef.getState() === MatDialogState.OPEN)
     ).subscribe(() => {
       this.accessPointsService.keepAlive(KEEP_ALIVE_INTERVAL)
@@ -97,11 +98,18 @@ export class AccessPointsComponent implements OnInit {
   }
 
   getAccessPoints(): void {
+    // TODO: is there a standard Angular way to not make a request if the last such request hasn't completed yet?
+    if (this.fetching) {
+      return;
+    }
+    this.fetching = true;
+
     // Subscribe for access points and sort them by SSID when received.
     // Nomally Android displays SSIDs sorted by RSSI but as of MicroPython 1.12 RSSI is not available for the ESP32 port.
     this.accessPointsService.getAccessPoints()
       .pipe(
-        tap(_0 => this.spinnerService.hide())
+        tap(_0 => this.spinnerService.hide()),
+        tap(_0 => this.fetching = false)
       )
       .subscribe(points => this.points = points.sort((a, b) => a.ssid.localeCompare(b.ssid)));
   }
