@@ -3,6 +3,7 @@ from http.server import BaseHTTPRequestHandler
 from http import HTTPStatus
 from random import randrange, randint, sample
 from re import match
+from time import sleep
 
 from flask import Flask
 from flask import json
@@ -27,6 +28,7 @@ APPLICATION_JSON = app.config["JSONIFY_MIMETYPE"]
 
 @app.route("/api/access-points", methods=["GET"])
 def access_points():
+    sleep(2)  # Simulate delay in doing real scan.
     upper = len(_AP_LIST)
     lower = upper // 2
     size = randint(lower, upper)
