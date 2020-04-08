@@ -1,13 +1,6 @@
-<div *ngIf="alive; else shutdown">
-  <mat-toolbar color="primary" class="app-toolbar">
-    <span>WiFi setup</span>
-    <span class="fill-space"></span>
-    <mat-icon matRipple [matRippleUnbounded]="true" (click)="ap.getAccessPoints()">refresh</mat-icon>
-  </mat-toolbar>
-  <app-access-points #ap></app-access-points>
-</div>
-<ng-template #shutdown>
-  <div class="center-center">
-    <mat-spinner></mat-spinner>
-  </div>
-</ng-template>
+<mat-toolbar color="primary" class="app-toolbar">
+  <span>WiFi setup</span>
+  <span class="fill-space"></span>
+  <mat-icon matRipple [matRippleUnbounded]="true" (click)="ap.getAccessPoints()">refresh</mat-icon>
+</mat-toolbar>
+<app-access-points #ap></app-access-points>

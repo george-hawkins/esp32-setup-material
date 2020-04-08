@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
+import { tap } from 'rxjs/operators';
+
 import { MatDialog, MatDialogState, MatDialogRef } from '@angular/material/dialog';
 
 import { AccessPointsService } from '../access-points.service';
-import { AliveService } from '../alive.service';
+import { SpinnerOverlayService } from '../spinner-overlay.service';
 
 import { AuthDialogComponent } from '../auth-dialog/auth-dialog.component';
 import { ResultDialogComponent } from '../result-dialog/result-dialog.component';
@@ -29,9 +31,10 @@ export class AccessPointsComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private accessPointsService: AccessPointsService,
-    private aliveService: AliveService) { }
+    private spinnerService: SpinnerOverlayService) { }
 
   ngOnInit(): void {
+    this.spinnerService.show();
     this.getAccessPoints();
   }
 
@@ -59,7 +62,7 @@ export class AccessPointsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(_0 => {
       console.log('Result dialog was closed.');
       if (success) {
-        this.aliveService.nextAlive(false);
+        this.spinnerService.show();
       }
     });
   }
@@ -97,6 +100,9 @@ export class AccessPointsComponent implements OnInit {
     // Subscribe for access points and sort them by SSID when received.
     // Nomally Android displays SSIDs sorted by RSSI but as of MicroPython 1.12 RSSI is not available for the ESP32 port.
     this.accessPointsService.getAccessPoints()
+      .pipe(
+        tap(_0 => this.spinnerService.hide())
+      )
       .subscribe(points => this.points = points.sort((a, b) => a.ssid.localeCompare(b.ssid)));
   }
 }
