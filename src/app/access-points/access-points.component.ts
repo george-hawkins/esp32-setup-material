@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
-import { tap } from 'rxjs/operators';
-
 import { MatDialog, MatDialogState, MatDialogRef } from '@angular/material/dialog';
+
+import { timer, Subject } from 'rxjs';
+import { exhaustMap, takeWhile, finalize } from 'rxjs/operators';
 
 import { AccessPointsService } from '../access-points.service';
 import { SpinnerOverlayService } from '../spinner-overlay.service';
@@ -13,8 +14,6 @@ import { ResultDialogComponent } from '../result-dialog/result-dialog.component'
 import { AccessPoint } from '../AccessPoint';
 import { ConnectResponse, ConnectStatus } from '../ConnectResponse';
 
-import { timer } from 'rxjs';
-import { takeWhile } from 'rxjs/operators';
 
 // 250px looks narrow on a large screen but is about right for smartphones.
 const DIALOG_WIDTH = '250px';
@@ -26,17 +25,35 @@ const KEEP_ALIVE_INTERVAL = 2; // 2s.
   templateUrl: './access-points.component.html'
 })
 export class AccessPointsComponent implements OnInit {
-  private fetching = false;
   points: AccessPoint[];
+  getAccessPoints: () => void;
 
   constructor(
-    public dialog: MatDialog,
+    private dialog: MatDialog,
     private accessPointsService: AccessPointsService,
     private spinnerService: SpinnerOverlayService) { }
 
   ngOnInit(): void {
     this.spinnerService.show();
+
+    this.setupAccessPointsObservable();
+
     this.getAccessPoints();
+  }
+
+  private setupAccessPointsObservable(): void {
+    const s = new Subject<void>();
+
+    // Subscribe for access points and sort them by SSID when received.
+    // Nomally Android displays SSIDs sorted by RSSI but as of MicroPython 1.12 RSSI is not available for the ESP32 port.
+    s.asObservable().pipe(
+      // `exhaustMap` ignores events if an existing request has not yet completed.
+      exhaustMap(() => this.accessPointsService.getAccessPoints().pipe(
+        finalize(() => this.spinnerService.hide()) // Only really needed for very first request.
+      ))
+    ).subscribe(points => this.points = points.sort((a, b) => a.ssid.localeCompare(b.ssid)));
+
+    this.getAccessPoints = () => s.next();
   }
 
   openAuthDialog(point: AccessPoint): void {
@@ -95,22 +112,5 @@ export class AccessPointsComponent implements OnInit {
         console.log('Connect response (at component level):', response);
         this.openResultDialog(response);
       });
-  }
-
-  getAccessPoints(): void {
-    // TODO: is there a standard Angular way to not make a request if the last such request hasn't completed yet?
-    if (this.fetching) {
-      return;
-    }
-    this.fetching = true;
-
-    // Subscribe for access points and sort them by SSID when received.
-    // Nomally Android displays SSIDs sorted by RSSI but as of MicroPython 1.12 RSSI is not available for the ESP32 port.
-    this.accessPointsService.getAccessPoints()
-      .pipe(
-        tap(_0 => this.spinnerService.hide()),
-        tap(_0 => this.fetching = false)
-      )
-      .subscribe(points => this.points = points.sort((a, b) => a.ssid.localeCompare(b.ssid)));
   }
 }
