@@ -44,14 +44,12 @@ export class AccessPointsComponent implements OnInit {
   private setupAccessPointsObservable(): void {
     const s = new Subject<void>();
 
-    // Subscribe for access points and sort them by SSID when received.
-    // Nomally Android displays SSIDs sorted by RSSI but as of MicroPython 1.12 RSSI is not available for the ESP32 port.
     s.asObservable().pipe(
       // `exhaustMap` ignores events if an existing request has not yet completed.
       exhaustMap(() => this.accessPointsService.getAccessPoints().pipe(
-        finalize(() => this.spinnerService.hide()) // Only really needed for very first request.
+        finalize(() => this.spinnerService.hide()) // Only actually needed for very first request.
       ))
-    ).subscribe(points => this.points = points.sort((a, b) => a.ssid.localeCompare(b.ssid)));
+    ).subscribe(points => this.points = points.sort((a, b) => b.rssi - a.rssi)); // Sort by RSSI like Android does.
 
     this.getAccessPoints = () => s.next();
   }

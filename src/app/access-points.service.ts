@@ -21,7 +21,7 @@ export class AccessPointsService {
   constructor(private http: HttpClient) { }
 
   connect(point: AccessPoint, password: string): Observable<ConnectResponse> {
-    const params = new HttpParams().set('bssid', point.bssid).set('password', password);
+    const params = new HttpParams().set('ssid', point.ssid).set('password', password);
 
     return this.http.post<any>(CONNECT_URL, params).pipe(
       tap(response => console.log('Connect response:', response)),
@@ -46,7 +46,7 @@ export class AccessPointsService {
   getAccessPoints(): Observable<AccessPoint[]> {
     return this.http.get<string[][]>(ACCESS_POINT_URL)
       .pipe(
-        map(points => points.map(p => new AccessPoint(p[0], p[1]))),
+        map(points => points.map(p => new AccessPoint(p[0], Number(p[1]), Number(p[2])))),
         tap(points => console.log(`Retrieved ${points.length} access points.`)),
         catchError(this.handleError<AccessPoint[]>('getAccessPoints', []))
       );
