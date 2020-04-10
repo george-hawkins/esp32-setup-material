@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from binascii import unhexlify
 from http.server import BaseHTTPRequestHandler
 from http import HTTPStatus
 from random import randrange, randint, sample
@@ -33,17 +34,50 @@ def access_points():
     lower = upper // 2
     size = randint(lower, upper)
     # Return a random sample of elements from _AP_LIST.
-    return jsonify(sample(_AP_LIST, size))
+    list = sample(_AP_LIST, size)
+    list = [(p[0].decode("utf-8"), p[1], p[2]) for p in list]
+    return jsonify(list)
 
 
-_AP_LIST = [["George Hawkins AC", "788a20498c26"], ["UPC Wi-Free", "3a431d3e4ec7"], ["Salt_2GHz_8A9F85", "44fe3b8a9f87"], ["SiCo's", "d8fb5eac6d50"], ["SiCo's Ospiti", "d8fb5eac6d51"], ["Sonja's iPhone", "f249bec2ec94"], ["JB_40", "488d36d5c83a"], ["jonas-guest", "488d36d5c83b"], ["UPC73A7C75", "ac2205767bb4"], ["UPC Wi-Free", "ae2215767bb4"], ["UPC Wi-Free", "925c14cbe5d9"], ["Salt_2GHz_FC5BC1", "44fe3bfc5bc3"], ["UPC7E68DDA", "905c44cbe5d9"], ["Mattinet2", "e0469a684727"], ["jonas-guest", "a0648f3663b1"], ["gurke", "6466b31646e5"], ["uVoPiC", "5467512dbbf6"]]
+_AP_LIST = [
+    (b"George Hawkins AC", -58, 3),
+    (b"UPC Wi-Free", -58, 5),
+    (b"Salt_2GHz_450122", -75, 3),
+    (b"Salt_2GHz_8A9F85", -84, 3),
+    (b"SiCo's", -86, 3),
+    (b"SiCo's Ospiti", -86, 3),
+    (b"jonas-guest", -91, 3),
+    (b"teh-04236", -92, 4),
+    (b"JB_40", -92, 3),
+    (b"JB_40", -92, 3),
+    (b"jonas-guest", -92, 3),
+    (b"gurke", -93, 3),
+    (b"ZyXEL_DAF8", -95, 3),
+]
+
+# Access points that are the names of the given languages in their specific script.
+# Use to test round-tripping of UTF-8 SSIDs.
+_AP_LIST += [
+    (unhexlify(b"e6b189e8afad"), -100, 3),  # Chinese
+    (unhexlify(b"d8a7d98ed984d992d8b9d98ed8b1d98ed8a8d990d98ad98ed991d8a9d98f"), -100, 3),  # Arabic
+    (unhexlify(b"d180d183d181d181d0bad0b8d0b920d18fd0b7d18bd0ba"), -100, 3),  # Russian
+    (unhexlify(b"ed959ceab5adec96b42f"), -100, 3),  # Korean
+    (unhexlify(b"e0b8a0e0b8b2e0b8a9e0b8b2e0b984e0b897e0b8a2"), -100, 3),  # Thai
+    (unhexlify(b"ce95cebbcebbceb7cebdceb9cebaceac"), -100, 3),  # Greek
+    (unhexlify(b"d7a2d6b4d791d6b0d7a8d6b4d799d7aae2808e"), -100, 3),  # Hebrew
+]
 
 
 @app.route("/api/access-point", methods=["POST"])
 def access_point():
-    bssid = request.form["bssid"]
+    ssid = request.form["ssid"]
     password = request.form["password"]
-    print("Received request to connect to {} with password \"{}\"".format(bssid, password))
+    print("Received request to connect to {} with password \"{}\"".format(ssid, password))
+    ssid = ssid.encode("utf-8")
+    # Make sure the SSID didn't get mangled going from here to client and back.
+    found = next((True for point in _AP_LIST if point[0] == ssid), False)
+    if not found:
+        abort(HTTPStatus.NOT_FOUND)
     # Use the password to specify the response you want:
     # * If it contains "good" OK is returned.
     # * If it contains "invalid" BAD_REQUEST is returned.
