@@ -44,15 +44,14 @@ _AP_LIST = [
     (b"UPC Wi-Free", -58, 5),
     (b"Salt_2GHz_450122", -75, 3),
     (b"Salt_2GHz_8A9F85", -84, 3),
-    (b"SiCo's", -86, 3),
+    (b"SiCo's", -86, 0),
     (b"SiCo's Ospiti", -86, 3),
     (b"jonas-guest", -91, 3),
     (b"teh-04236", -92, 4),
-    (b"JB_40", -92, 3),
-    (b"JB_40", -92, 3),
+    (b"JB_40", -92, 0),
     (b"jonas-guest", -92, 3),
     (b"gurke", -93, 3),
-    (b"ZyXEL_DAF8", -95, 3),
+    (b"ZyXEL_DAF8", -95, 0),
 ]
 
 # Access points that are the names of the given languages in their specific script.
@@ -61,32 +60,58 @@ _AP_LIST += [
     (unhexlify(b"e6b189e8afad"), -100, 3),  # Chinese
     (unhexlify(b"d8a7d98ed984d992d8b9d98ed8b1d98ed8a8d990d98ad98ed991d8a9d98f"), -100, 3),  # Arabic
     (unhexlify(b"d180d183d181d181d0bad0b8d0b920d18fd0b7d18bd0ba"), -100, 3),  # Russian
-    (unhexlify(b"ed959ceab5adec96b42f"), -100, 3),  # Korean
+    (unhexlify(b"ed959ceab5adec96b42f"), -100, 0),  # Korean
     (unhexlify(b"e0b8a0e0b8b2e0b8a9e0b8b2e0b984e0b897e0b8a2"), -100, 3),  # Thai
     (unhexlify(b"ce95cebbcebbceb7cebdceb9cebaceac"), -100, 3),  # Greek
-    (unhexlify(b"d7a2d6b4d791d6b0d7a8d6b4d799d7aae2808e"), -100, 3),  # Hebrew
+    (unhexlify(b"d7a2d6b4d791d6b0d7a8d6b4d799d7aae2808e"), -100, 0),  # Hebrew
 ]
+
+
+# With the non-open dummy APs you can signal with the password what response you want.
+# For the open APs this isn't possible, so two of them just always response FORBIDDEN.
+_FORBIDDEN_OPEN_APS = [
+    b"JB_40",
+    unhexlify(b"ed959ceab5adec96b42f")  # Korean
+]
+
+
+def _success():
+    address = "192.168.0." + str(randrange(256))
+    print("Returning dummy address {}".format(address))
+    return {"message": address}
 
 
 @app.route("/api/access-point", methods=["POST"])
 def access_point():
     ssid = request.form["ssid"]
-    password = request.form["password"]
-    print("Received request to connect to {} with password \"{}\"".format(ssid, password))
+    print("Received request to connect to {} ".format(ssid), end="")
+    password = request.form.get("password")
+    if password:
+        print("with password \"{}\"".format(password))
+    else:
+        print("without password");
     ssid = ssid.encode("utf-8")
     # Make sure the SSID didn't get mangled going from here to client and back.
     found = next((True for point in _AP_LIST if point[0] == ssid), False)
     if not found:
         abort(HTTPStatus.NOT_FOUND)
+
+    if not password:
+        from binascii import hexlify
+        print(hexlify(ssid))
+        print(_FORBIDDEN_OPEN_APS[1])
+        forbidden = next((True for point in _FORBIDDEN_OPEN_APS if point == ssid), False)
+        if forbidden:
+            abort(HTTPStatus.FORBIDDEN)
+        return _success()
+
     # Use the password to specify the response you want:
     # * If it contains "good" OK is returned.
     # * If it contains "invalid" BAD_REQUEST is returned.
     # * If it consists of 3 digits, a space and some text then they're returned as the status code and description.
     # * Otherwise FORBIDDEN is returned.
     if "good" in password:
-        address = "192.168.0." + str(randrange(256))
-        print("Returning dummy address {}".format(address))
-        return {"message": address}
+        return _success()
     elif "invalid" in password:
         abort(HTTPStatus.BAD_REQUEST)
     else:
