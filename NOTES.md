@@ -160,6 +160,49 @@ Toggling password visibility
 
 Toggling the visibility of the entered password is easy. There are many complex solutions floating around on the web, but Ole Ersoy demonstrates a super simple approach in his ["Angular Material Password Field With Visibility Toggle"](https://link.medium.com/z4h8YHrpZ4) blog post. There's an even simpler approach if you use a checkbox (which is what is actually used in the Android 9 WiFi connection dialog) as described by Jeremy Elbourn in his comment on Material Design GitHub issue [#1940](https://github.com/angular/components/issues/1940#issuecomment-262106389).
 
+Material icons
+--------------
+
+For whatever reason the Material icons [reference page](https://material.io/resources/icons/) does **not** include all available icons. There are some notable omissions, e.g. the icons associated with copy and paste (I commented on this in material-design-icons issue [#969](https://github.com/google/material-design-icons/issues/968#issuecomment-602195994)).
+
+The material-design-icons includes a directory of [reference pages](https://github.com/google/material-design-icons/tree/master/sprites/svg-sprite) for all the sprites they provide. Oddly, I can't find these served in a directly viewable form (on GitHub you can just view the raw HTML) so you have to use something [raw.githack.com](https://raw.githack.com/) to view them like so:
+
+* [Action](https://raw.githack.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-action.html).
+* [Alert](https://raw.githack.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-alert.html).
+* [Av](https://raw.githack.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-av.html).
+* [Communication](https://raw.githack.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-communication.html).
+* [Content](https://raw.githack.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-content.html).
+* [Device](https://raw.githack.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-device.html).
+* [Editor](https://raw.githack.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-editor.html).
+* [File](https://raw.githack.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-file.html).
+* [Hardware](https://raw.githack.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-hardware.html).
+* [Image](https://raw.githack.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-image.html).
+* [Maps](https://raw.githack.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-maps.html).
+* [Navigation](https://raw.githack.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-navigation.html).
+* [Notification](https://raw.githack.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-notification.html).
+* [Places](https://raw.githack.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-places.html).
+* [Social](https://raw.githack.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-social.html).
+* [Toggle](https://raw.githack.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-toggle.html).
+
+Some of these sprites are available in the standard Material icons font file despite not being listed on the reference page. E.g. the `ic_content_copy_24px` sprite (found on the Content page above) is there, you just have to knock off the `ic_` prefix and the `_24px` suffix and use it like so:
+
+    <mat-icon>content_copy</mat-icon>
+
+Others however are missing, e.g. on the Devices page, you can find various signal strength sprites - `signal_wifi_0_bar` to `signal_wifi_4_bar` - however only the 4 bar variant is available in the font file:
+
+    <mat-icon>signal_wifi_4_bar</mat-icon>
+
+According to the `MatIcon` [documentation](https://material.angular.io/components/icon/api#MatIcon) its the text associated with a ligature that determines the name you use with the `mat-icon` tag. I haven't found a simple way to dump these names for a font file but you can see them in the [`codepoints`](https://github.com/google/material-design-icons/blob/master/iconfont/codepoints) file in the material-design-icons repo. Here you can easily see that `content_copy` and `signal_wifi_4_bar` are present but `signal_wifi_0_bar` is not.
+
+For sprites that aren't available in the Material icons font, you can find (as noted [here](http://google.github.io/material-design-icons/#icon-images-for-the-web)) the appropriate SVG icons under `*/svg/production` in the material-design-icon [repo](https://github.com/google/material-design-icons/). E.g. for `signal_wifi_0_bar` is under `device/svg/production` as `ic_signal_wifi_0_bar_24px.svg`. There are also 18px and 48px variants but 24px is the standard size used by `mat-icon`.
+
+To use such icons, I copied them into my project like so:
+
+    $ mkdir -p src/assets/svg/icons
+    $ cp ../material-design-icons/device/svg/production/ic_signal_wifi_?_bar_24px.svg src/assets/svg/icons
+
+And then I registered them with `MatIconRegistry` in a fashion similar to that described in this [tutorial](https://dev.to/elasticrash/using-custom-made-svg-icons-through-the-angular-material-library-2pif) by Stefanos Kouroupis.
+
 Creating a minimal initial Angular project
 ------------------------------------------
 
