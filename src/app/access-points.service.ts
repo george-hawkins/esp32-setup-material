@@ -20,8 +20,20 @@ const FORBIDDEN = 403;
 export class AccessPointsService {
   constructor(private http: HttpClient) { }
 
-  connect(point: AccessPoint, password: string): Observable<ConnectResponse> {
-    const params = new HttpParams().set('ssid', point.ssid).set('password', password);
+  openConnect(point: AccessPoint): Observable<ConnectResponse> {
+    return this.connect(point);
+  }
+
+  passwordConnect(point: AccessPoint, password: string): Observable<ConnectResponse> {
+    return this.connect(point, { 'password': password });
+  }
+
+  private connect(point: AccessPoint, extraParams: Record<string, string> = {}): Observable<ConnectResponse> {
+    let params = new HttpParams().set('ssid', point.ssid);
+
+    for (let key in extraParams) {
+      params = params.set(key, extraParams[key]); // Each call to `set` returns a _new_ object.
+    }
 
     return this.http.post<any>(CONNECT_URL, params).pipe(
       tap(response => console.log('Connect response:', response)),

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { MatDialog, MatDialogState, MatDialogRef } from '@angular/material/dialog';
 
-import { timer, Subject } from 'rxjs';
+import { timer, Subject, Observable } from 'rxjs';
 import { exhaustMap, takeWhile, finalize } from 'rxjs/operators';
 
 import { AccessPointsService } from '../access-points.service';
@@ -13,6 +13,7 @@ import { ResultDialogComponent } from '../result-dialog/result-dialog.component'
 
 import { AccessPoint } from '../AccessPoint';
 import { ConnectResponse, ConnectStatus } from '../ConnectResponse';
+import { AuthMode } from '../AuthMode';
 
 
 // 250px looks narrow on a large screen but is about right for smartphones.
@@ -54,7 +55,15 @@ export class AccessPointsComponent implements OnInit {
     this.getAccessPoints = () => s.next();
   }
 
-  openAuthDialog(point: AccessPoint): void {
+  select(point: AccessPoint): void {
+    if (point.authmode == AuthMode.OPEN) {
+      this.openConnect(point);
+    } else {
+      this.openAuthDialog(point);
+    }
+  }
+
+  private openAuthDialog(point: AccessPoint): void {
     const dialogRef = this.dialog.open(AuthDialogComponent, {
       width: DIALOG_WIDTH,
       data: point
@@ -101,14 +110,48 @@ export class AccessPointsComponent implements OnInit {
     }
     console.log('Attempting to connect to', point.ssid);
 
-    this.connect(point, password);
+    this.passwordConnect(point, password);
   }
 
-  private connect(point: AccessPoint, password: string): void {
-    this.accessPointsService.connect(point, password)
-      .subscribe(response => {
-        console.log('Connect response (at component level):', response);
-        this.openResultDialog(response);
-      });
+  private openConnect(point: AccessPoint): void {
+    const connect$ = this.accessPointsService.openConnect(point);
+
+    this.connectSubscribe(connect$);
+  }
+
+  private passwordConnect(point: AccessPoint, password: string): void {
+    const connect$ = this.accessPointsService.passwordConnect(point, password);
+
+    this.connectSubscribe(connect$);
+  }
+
+  private connectSubscribe(connect$: Observable<ConnectResponse>): void {
+    connect$.subscribe(response => {
+      console.log('Connect response (at component level):', response);
+      this.openResultDialog(response);
+    });
+  }
+
+  bars(rssi: number): number {
+    // This RSSI to bars mapping is a bit arbitrary and derived from comparing
+    // RSSI values reported by an ESP32 and the bars shown on my phone.
+    if (rssi > -70) return 4;
+    else if (rssi > -80) return 3;
+    else if (rssi > -90) return 2;
+    else if (rssi > -100) return 1;
+    else return 0;
+  }
+
+  isProtected(authmode: AuthMode): boolean {
+    return authmode != AuthMode.OPEN;
+  }
+
+  lockColor(authmode: AuthMode): string {
+    return this.isDisabled(authmode) ? "warn" : "basic";
+  }
+
+  isDisabled(authmode: AuthMode): boolean {
+    // Currently ENTERPRISE isn't supported.
+    return authmode == AuthMode.ENTERPRISE;
   }
 }

@@ -8,7 +8,11 @@
     <p>Click OK to finish and return to your usual network.</p> <!-- Returning to your usual network _should_ happen automatically when the temporary hotspot is shutdown. -->
   </div>
   <div *ngSwitchCase="connectStatus.FAILURE">
-    <p>Failed to connect to <b>{{data.point.ssid}}</b>. Try again - perhaps you selected the wrong network or you entered your password incorrectly.</p>
+    <p>Failed to connect to <b>{{data.point.ssid}}</b>.
+      Try again - perhaps you selected the wrong network<span *ngIf="hasPassword(data.point.authmode)">
+      or you entered your password incorrectly</span>.
+      <!-- Careful reformatting this paragraph or you'll get spaces in the wrong places. -->
+    </p>
   </div>
   <div *ngSwitchCase="connectStatus.UNEXPECTED_FAILURE">
     <p>An unexpected failure occurred while trying to connect to <b>{{data.point.ssid}}</b>.</p>
