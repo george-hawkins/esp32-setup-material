@@ -203,6 +203,23 @@ To use such icons, I copied them into my project like so:
 
 And then I registered them with `MatIconRegistry` in a fashion similar to that described in this [tutorial](https://dev.to/elasticrash/using-custom-made-svg-icons-through-the-angular-material-library-2pif) by Stefanos Kouroupis.
 
+**Update:** registering icons with `MatIconRegistry` only tells it where the icons are, they are only really loaded if they're actually used somewhere. Usually, this is a positive. But loading the individual SVG files one by one from an ESP32 results in the icons slowly popping into existence.
+
+So I conbined them into an icon set - I couldn't find any good documentation on how to do this and there's surprising variation in the layout of the SVG icon sets out there (they also seem to have rather gone out of style, with icon fonts appearing to be more common these days). In the end, I just looked at various examples and went with the layout that involved the least modification to the existing SVG data.
+
+Essentially I did:
+
+    $ for svg in ic_signal_wifi_*.svg
+    do
+        id=${svg/.svg}
+        sed -e 's/xmlns="[^"]*" width="[^"]*" height="[^"]*"/'id=\"$id\"/ -e 's/>/>\n/g' < $svg
+    done > tmp
+    $ echo "<svg><defs>$(< tmp)</defs></svg>" | xmllint --format - > tmp2
+    $ rm tmp ic_signal_wifi_*
+    $ mv tmp2 signal_wifi_bars.svg 
+
+And updated `src/app/icon.service.ts` to use `MatIconRegistry.addSvgIconSet` rather than `MatIconRegistry.addSvgIcon`.
+
 Creating a minimal initial Angular project
 ------------------------------------------
 
