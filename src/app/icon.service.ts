@@ -6,7 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   providedIn: 'root'
 })
 export class IconService {
-  private readonly LOCATION = '../assets/svg/icons/signal_wifi_bars.svg';
+  private readonly LOCATION = '../assets/svg/icons.svg';
 
   constructor(
     private matIconRegistry: MatIconRegistry,

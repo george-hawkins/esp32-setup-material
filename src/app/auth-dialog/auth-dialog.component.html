@@ -11,7 +11,7 @@
         [(ngModel)]="password"
         cdkFocusInitial>
       <!-- Controlling visibility - https://link.medium.com/z4h8YHrpZ4 -->
-      <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      <mat-icon matSuffix (click)="hide = !hide" svgIcon="{{hide ? 'visibility_off' : 'visibility'}}"></mat-icon>
     </mat-form-field>
   </div>
   <div mat-dialog-actions>

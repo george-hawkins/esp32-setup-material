@@ -138,6 +138,8 @@ Note that while the CSS files can reference lots of fonts and icon URLs, these a
 
 WOFF2 files are _already_ compressed and even the entire Angular icon set comes in at just 60KiB.
 
+**Update:** in the end, I removed `MaterialIcons-Regular.woff2` and instead just added only the icons I used to `icons.svg` (see section on this below). I would **not** do this in any situation other than for the extremely resource limited ESP32 setup.
+
 Form creation
 -------------
 
@@ -216,7 +218,7 @@ Essentially I did:
     done > tmp
     $ echo "<svg><defs>$(< tmp)</defs></svg>" | xmllint --format - > tmp2
     $ rm tmp ic_signal_wifi_*
-    $ mv tmp2 signal_wifi_bars.svg 
+    $ mv tmp2 icons.svg 
 
 And updated `src/app/icon.service.ts` to use `MatIconRegistry.addSvgIconSet` rather than `MatIconRegistry.addSvgIcon`.
 

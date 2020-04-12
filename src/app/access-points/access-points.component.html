@@ -1,8 +1,8 @@
 <mat-action-list>
   <button *ngFor="let point of points" mat-list-item (click)="select(point)" [disabled]="isDisabled(point.authmode)">
-    <mat-icon svgIcon="ic_signal_wifi_{{bars(point.rssi)}}_bar_24px"></mat-icon>
+    <mat-icon svgIcon="signal_wifi_{{bars(point.rssi)}}_bar"></mat-icon>
     <span class="left-pad-16">{{point.ssid}}</span>
     <span class="fill-space"></span>
-    <mat-icon matSuffix *ngIf="isProtected(point.authmode)" color="{{lockColor(point.authmode)}}">lock</mat-icon>
+    <mat-icon matSuffix *ngIf="isProtected(point.authmode)" color="{{lockColor(point.authmode)}}" svgIcon="lock"></mat-icon>
   </button>
 </mat-action-list>

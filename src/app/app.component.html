@@ -1,6 +1,6 @@
 <mat-toolbar color="primary" class="app-toolbar">
   <span>WiFi setup</span>
   <span class="fill-space"></span>
-  <mat-icon matRipple [matRippleUnbounded]="true" (click)="ap.getAccessPoints()">refresh</mat-icon>
+  <mat-icon matRipple [matRippleUnbounded]="true" (click)="ap.getAccessPoints()" svgIcon="refresh"></mat-icon>
 </mat-toolbar>
 <app-access-points #ap></app-access-points>

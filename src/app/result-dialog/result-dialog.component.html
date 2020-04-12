@@ -3,7 +3,7 @@
     <p class="bottom-margin-0">Your device has been connected to <b>{{data.point.ssid}}</b>.</p>
     <mat-form-field class="width-100pct">
       <input matInput readonly value="{{data.message}}">
-      <mat-icon matSuffix matRipple [matRippleUnbounded]="true" [cdkCopyToClipboard]="data.message">content_copy</mat-icon>
+      <mat-icon matSuffix matRipple [matRippleUnbounded]="true" [cdkCopyToClipboard]="data.message" svgIcon="content_copy"></mat-icon>
     </mat-form-field>
     <p>Click OK to finish and return to your usual network.</p> <!-- Returning to your usual network _should_ happen automatically when the temporary hotspot is shutdown. -->
   </div>
