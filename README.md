@@ -157,7 +157,7 @@ List all the Python versions that `pyenv` knows:
 
     $ pyenv install --list
 
-There are various Python variants, e.g. `anaconda`, `miniconda`, `pypy` and `stackless`. There's even `micropython`. But just look at the plain version numbers, e.g. `3.8.2`, choose the latest one and install it:
+There are various Python variants, e.g. `anaconda`, `miniconda`, `pypy` and `stackless`. There's even `micropython` (see [#1588](https://github.com/pyenv/pyenv/issues/1588) for Mac). But just look at the plain version numbers, e.g. `3.8.2`, choose the latest one and install it:
 
     $ pyenv install 3.8.2
 
