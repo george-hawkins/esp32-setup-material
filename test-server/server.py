@@ -35,6 +35,9 @@ def access_points():
     size = randint(lower, upper)
     # Return a random sample of elements from _AP_LIST.
     list = sample(_AP_LIST, size)
+    # Duplicate SSID seem to be quite common in practice, do deliberately duplicate
+    # all SSIDs, giving each duplicate a slightly lower RSSI value than the original.
+    list += [(p[0], p[1] - 1, p[2]) for p in list]
     list = [(p[0].decode("utf-8"), p[1], p[2]) for p in list]
     return jsonify(list)
 
@@ -96,10 +99,10 @@ def access_point():
     if not found:
         abort(HTTPStatus.NOT_FOUND)
 
+    sleep(2)  # Simulate delay in doing real connect.
+
     if not password:
         from binascii import hexlify
-        print(hexlify(ssid))
-        print(_FORBIDDEN_OPEN_APS[1])
         forbidden = next((True for point in _FORBIDDEN_OPEN_APS if point == ssid), False)
         if forbidden:
             abort(HTTPStatus.FORBIDDEN)
