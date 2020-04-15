@@ -10,7 +10,7 @@ Initial project setup
 
 I created the project with `ng new` like so:
 
-    $ ng new --routing=false --style=css --skip-install --skip-tests --directory wifi-setup-material wifi-setup
+    $ ng new --routing=false --style=css --skip-install --skip-tests --directory material-wifi-setup wifi-setup
 
 Note: if you don't specify `--routing` and `--style` it'll interactively ask how you want these configured.
 
@@ -235,11 +235,11 @@ So I compared two projects created as shown:
 
 And on the basis of this created a new project like so:
 
-    $ ng new --routing=false --style=css --skip-install --skip-tests --directory wifi-setup-material wifi-setup
+    $ ng new --routing=false --style=css --skip-install --skip-tests --directory material-wifi-setup wifi-setup
 
 And set about minimizing it:
 
-    $ cd wifi-setup-material
+    $ cd material-wifi-setup
     $ git rm -r .editorconfig e2e karma.conf.js src/test.ts tsconfig.spec.json src/app/app.component.html
     $ git commit -m 'Removed test related resources, .editorconfig and the getting-started app.component.html content.'
 
