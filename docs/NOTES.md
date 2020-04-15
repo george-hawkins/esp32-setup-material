@@ -140,27 +140,33 @@ WOFF2 files are _already_ compressed and even the entire Angular icon set comes 
 
 **Update:** in the end, I removed `MaterialIcons-Regular.woff2` and instead just added only the icons I used to `icons.svg` (see section on this below). I would **not** do this in any situation other than for the extremely resource limited ESP32 setup.
 
-Form creation
--------------
+Self-hosting icon and font files - the details
+----------------------------------------------
 
-Adding validation requirements to an input field is easy:
+As noted above, I went with a fairly simple approach to self-hosting the icon and font files pulled in via `src/index.html`.
 
-    <input matInput required minlength="8" ...>
+Google covers getting the raw assets here:
 
-However it took me quite some time to work out that for the validation to work the field _must_ be named:
+* The ["Getting icons"](http://google.github.io/material-design-icons/#getting-icons) section of the Material icons guide - includes instructions for getting individual SVGs and installing via `npm`.
+* The Google Fonts [Roboto page](https://fonts.google.com/specimen/Roboto) - here you can view the font but only download old style TTF files rather than web optimized WOFF2.
 
-    <input matInput name="password" required minlength="8" ...>
+The easiest way to get both icons and fonts is to install them using `npm`:
 
-The `type` of `button` elements is `submit` by default, this caused me a lot of confusion as initially, I didn't set the `type` attribute for the CANCEL and CONNECT buttons in my dialog. When I found that pressing return caused the dialog to close even if a valid password hadn't been entered I tried setting the `type` of the CONNECT button to `submit` but this changed nothing. It turned out pressing return was triggering CANCEL and the way to disable this was to explicitly set its type to `button`.
+    $ npm install typeface-roboto
+    $ npm install material-design-icons
 
-**Update:** initially I used the HTML attributes `required` and `minlength` to specify validity for the password field. However clicking on the visibility icon in the field caused its validity to be updated immediately (even though from a user point of view you haven't left the field) and it was visually marked in red as invalid (if you hadn't already entered the minimum required number of characters). So in the end I removed the `required` and `minlength` attributes. The field is now never marked as invalid and the connect button (that used to become enabled once the overall form stopped being invalid) is now disabled via a simple check on the password property of the underlying component.
+Note that, unlike `material-design-icons`, [`typeface-roboto`](https://github.com/KyleAMathews/typefaces/tree/master/packages/roboto) isn't from Google - but it seems popular and basically automates the process described on Google's own [fonts repo](https://github.com/google/fonts) - i.e. using [google-webfonts-helper](https://github.com/majodev/google-webfonts-helper) to generate CSS and WOFF2 files.
 
-Note: Angular has two different approaches to handling forms - template-driven and reactive. Template-driven forms use the standard HTML attributes, like `minlength` etc., to establish validity. While initially simple this doesn't work out so well once things get a little bit complicated -for this you need reactive forms where the validity is configured in the underlying component class. See the Angular [forms guide](https://angular.io/guide/forms-overview) for more.
+Once installed you can find the CSS files in `node_modules/typeface-roboto/index.css` and `node_modules/material-design-icons/iconfont/material-icons.css` and from there you can find the referenced WOFF2 files.
 
-Toggling password visibility
-----------------------------
+Over time there have been various ways to pull these into your Angular project, but the current "right way" seems to be to add the following at the start of your to your `src/styles.css`:
 
-Toggling the visibility of the entered password is easy. There are many complex solutions floating around on the web, but Ole Ersoy demonstrates a super simple approach in his ["Angular Material Password Field With Visibility Toggle"](https://link.medium.com/z4h8YHrpZ4) blog post. There's an even simpler approach if you use a checkbox (which is what is actually used in the Android 9 WiFi connection dialog) as described by Jeremy Elbourn in his comment on Material Design GitHub issue [#1940](https://github.com/angular/components/issues/1940#issuecomment-262106389).
+    @import 'material-design-icons/iconfont/material-icons.css';
+    @import 'typeface-roboto';
+
+Note: the Angular build process uses [postcss-import](https://github.com/postcss/postcss-import) to process these import statements and inline the referenced CSS. If you're wondering at the long explicit path for `material-design-icons` vs the much shorter import for `typeface-roboto`, it's because postcss-import can find the CSS file automatically if the package has a particular expected structure - `typeface-roboto` has this structure and `material-design-icons` does not.
+
+In the end though I went with a simpler but more mechanical approach to all this, that's covered above.
 
 Material icons
 --------------
@@ -258,33 +264,27 @@ If you now look at what's left, it's actually a fairly small set of files:
     angular.json
     ...
 
-Self-hosting icon and font files - the details
-----------------------------------------------
+Form creation
+-------------
 
-As noted above, I went with a fairly simple approach to self-hosting the icon and font files pulled in via `src/index.html`.
+Adding validation requirements to an input field is easy:
 
-Google covers getting the raw assets here:
+    <input matInput required minlength="8" ...>
 
-* The ["Getting icons"](http://google.github.io/material-design-icons/#getting-icons) section of the Material icons guide - includes instructions for getting individual SVGs and installing via `npm`.
-* The Google Fonts [Roboto page](https://fonts.google.com/specimen/Roboto) - here you can view the font but only download old style TTF files rather than web optimized WOFF2.
+However it took me quite some time to work out that for the validation to work the field _must_ be named:
 
-The easiest way to get both icons and fonts is to install them using `npm`:
+    <input matInput name="password" required minlength="8" ...>
 
-    $ npm install typeface-roboto
-    $ npm install material-design-icons
+The `type` of `button` elements is `submit` by default, this caused me a lot of confusion as initially, I didn't set the `type` attribute for the CANCEL and CONNECT buttons in my dialog. When I found that pressing return caused the dialog to close even if a valid password hadn't been entered I tried setting the `type` of the CONNECT button to `submit` but this changed nothing. It turned out pressing return was triggering CANCEL and the way to disable this was to explicitly set its type to `button`.
 
-Note that, unlike `material-design-icons`, [`typeface-roboto`](https://github.com/KyleAMathews/typefaces/tree/master/packages/roboto) isn't from Google - but it seems popular and basically automates the process described on Google's own [fonts repo](https://github.com/google/fonts) - i.e. using [google-webfonts-helper](https://github.com/majodev/google-webfonts-helper) to generate CSS and WOFF2 files.
+**Update:** initially I used the HTML attributes `required` and `minlength` to specify validity for the password field. However clicking on the visibility icon in the field caused its validity to be updated immediately (even though from a user point of view you haven't left the field) and it was visually marked in red as invalid (if you hadn't already entered the minimum required number of characters). So in the end I removed the `required` and `minlength` attributes. The field is now never marked as invalid and the connect button (that used to become enabled once the overall form stopped being invalid) is now disabled via a simple check on the password property of the underlying component.
 
-Once installed you can find the CSS files in `node_modules/typeface-roboto/index.css` and `node_modules/material-design-icons/iconfont/material-icons.css` and from there you can find the referenced WOFF2 files.
+Note: Angular has two different approaches to handling forms - template-driven and reactive. Template-driven forms use the standard HTML attributes, like `minlength` etc., to establish validity. While initially simple this doesn't work out so well once things get a little bit complicated -for this you need reactive forms where the validity is configured in the underlying component class. See the Angular [forms guide](https://angular.io/guide/forms-overview) for more.
 
-Over time there have been various ways to pull these into your Angular project, but the current "right way" seems to be to add the following at the start of your to your `src/styles.css`:
+Toggling password visibility
+----------------------------
 
-    @import 'material-design-icons/iconfont/material-icons.css';
-    @import 'typeface-roboto';
-
-Note: the Angular build process uses [postcss-import](https://github.com/postcss/postcss-import) to process these import statements and inline the referenced CSS. If you're wondering at the long explicit path for `material-design-icons` vs the much shorter import for `typeface-roboto`, it's because postcss-import can find the CSS file automatically if the package has a particular expected structure - `typeface-roboto` has this structure and `material-design-icons` does not.
-
-In the end though I went with a simpler but more mechanical approach to all this, that's covered up above.
+Toggling the visibility of the entered password is easy. There are many complex solutions floating around on the web, but Ole Ersoy demonstrates a super simple approach in his ["Angular Material Password Field With Visibility Toggle"](https://link.medium.com/z4h8YHrpZ4) blog post. There's an even simpler approach if you use a checkbox (which is what is actually used in the Android 9 WiFi connection dialog) as described by Jeremy Elbourn in his comment on Material Design GitHub issue [#1940](https://github.com/angular/components/issues/1940#issuecomment-262106389).
 
 ng build and es5
 ----------------
