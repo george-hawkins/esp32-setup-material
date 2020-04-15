@@ -62,6 +62,7 @@ export class AccessPointsService {
         tap(points => console.log(`Retrieved ${points.length} access points.`)),
         catchError(this.handleError<AccessPoint[]>('getAccessPoints', []))
       );
+      // Note that in the test setup half the received access points will be filtered out as duplicates.
   }
 
   keepAlive(seconds: number): Observable<boolean> {

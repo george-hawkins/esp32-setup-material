@@ -50,13 +50,35 @@ export class AccessPointsComponent implements OnInit {
       exhaustMap(() => this.accessPointsService.getAccessPoints().pipe(
         finalize(() => this.spinnerService.hide()) // Only actually needed for very first request.
       ))
-    ).subscribe(points => this.points = points.sort((a, b) => b.rssi - a.rssi)); // Sort by RSSI like Android does.
+    ).subscribe(points => this.points = this.sort(points)); 
 
     this.getAccessPoints = () => s.next();
   }
 
+  private sort(points: AccessPoint[]): AccessPoint[] {
+    // First sort by RSSI like Android does.
+    const sorted = points.sort((a, b) => b.rssi - a.rssi);
+    const seen = new Set<string>();
+    const result: AccessPoint[] = [];
+
+    // If the same SSID appears multiple times ignore those that sort lower (have lower RSSI).
+    sorted.forEach(p => {
+      if (!seen.has(p.ssid)) {
+        seen.add(p.ssid);
+        result.push(p);
+      }
+    });
+
+    return result;
+  }
+
   select(point: AccessPoint): void {
-    if (point.authmode == AuthMode.OPEN) {
+    if (this.isDisabled(point.authmode)) {
+      // Do nothing. Previously `isDisabled` was used to set the button, corresponding
+      // to this access point, to disabled but this made the button look more
+      // highlighted than disabled. Now just the red lock icon is all that flags up
+      // these "problem" access points.
+    } else if (point.authmode == AuthMode.OPEN) {
       this.openConnect(point);
     } else {
       this.openAuthDialog(point);
@@ -126,7 +148,10 @@ export class AccessPointsComponent implements OnInit {
   }
 
   private connectSubscribe(connect$: Observable<ConnectResponse>): void {
-    connect$.subscribe(response => {
+    this.spinnerService.show()
+    connect$.pipe(
+        finalize(() => this.spinnerService.hide())
+    ).subscribe(response => {
       console.log('Connect response (at component level):', response);
       this.openResultDialog(response);
     });

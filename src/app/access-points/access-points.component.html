@@ -1,5 +1,5 @@
 <mat-action-list>
-  <button *ngFor="let point of points" mat-list-item (click)="select(point)" [disabled]="isDisabled(point.authmode)">
+  <button *ngFor="let point of points" mat-list-item (click)="select(point)">
     <mat-icon svgIcon="signal_wifi_{{bars(point.rssi)}}_bar"></mat-icon>
     <span class="left-pad-16">{{point.ssid}}</span>
     <span class="fill-space"></span>
