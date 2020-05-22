@@ -6,7 +6,7 @@ Normally you'd test an Angular project against either the [in-memory web API mod
 Setup
 -----
 
-The main [`README`](../README.md) describes installing a standard Python [venv](https://docs.python.org/3/tutorial/venv.html), then installing [Flask](https://flask.palletsprojects.com/) and [APScheduler](https://apscheduler.readthedocs.io/en/stable/userguide.html) and running the [`server.py`](server.py) file in Flask.
+The main [`README`](../README.md) describes installing a standard Python venv, then installing [Flask](https://flask.palletsprojects.com/) and [APScheduler](https://apscheduler.readthedocs.io/en/stable/userguide.html) and running the [`server.py`](server.py) file in Flask.
 
 The `server.py` file was created using the Flask [quickstart guide](https://flask.palletsprojects.com/en/1.1.x/quickstart/) as the main reference.
 

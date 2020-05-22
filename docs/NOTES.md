@@ -29,7 +29,7 @@ Once `install` is complete you end up with a `node_modules` subdirectory and a `
     $ git add package-lock.json
     $ git commit -m 'Added package-lock.json.'
 
-Now the project can be built, served and automatically opened it in the current browser:
+Now the project can be built, served and automatically opened in the current browser:
 
     $ ng serve --open
 
@@ -64,9 +64,9 @@ Test backend server
 
 The intention is that the frontend created here is served out by the same server that provides the backend with which it communicates (using [REST](https://en.wikipedia.org/wiki/Representational_state_transfer)).
 
-However during development it's more convenient to have a separate test-server running as the backend (as described in the main [`README`](README.md)).
+However during development it's more convenient to have a separate test-server running as the backend (as described in the main [`README`](../README.md)).
 
-This is achieved by adding [`src/proxy.conf.json`](src/proxy.conf.json) and adding a `proxyConfig` entry to [`angular.json`](angular.json) as described in the ["Proxying to a backend server"](https://angular.io/guide/build#proxying-to-a-backend-server) section of the Angular development workflow guide.
+This is achieved by adding [`src/proxy.conf.json`](../src/proxy.conf.json) and adding a `proxyConfig` entry to [`angular.json`](../angular.json) as described in the ["Proxying to a backend server"](https://angular.io/guide/build#proxying-to-a-backend-server) section of the Angular development workflow guide.
 
 With this done, `ng serve` will automatically proxy frontend requests for URLs like `/api/access-points` through to the test server (this works even when using `--prod` with `ng serve`).
 
@@ -138,7 +138,7 @@ Note that while the CSS files can reference lots of fonts and icon URLs, these a
 
 WOFF2 files are _already_ compressed and even the entire Angular icon set comes in at just 60KiB.
 
-**Update:** in the end, I removed `MaterialIcons-Regular.woff2` and instead just added only the icons I used to `icons.svg` (see section on this below). I would **not** do this in any situation other than for the extremely resource limited ESP32 setup.
+**Update:** in the end, I removed `MaterialIcons-Regular.woff2` and instead just added only the icons I used to `icons.svg` (see section on this below). I would **not** do this in any situation other than for the extremely resource limited MicroPython setup.
 
 Self-hosting icon and font files - the details
 ----------------------------------------------
@@ -147,7 +147,7 @@ As noted above, I went with a fairly simple approach to self-hosting the icon an
 
 Google covers getting the raw assets here:
 
-* The ["Getting icons"](http://google.github.io/material-design-icons/#getting-icons) section of the Material icons guide - includes instructions for getting individual SVGs and installing via `npm`.
+* The ["Getting icons"](http://google.github.io/material-design-icons/#getting-icons) section of the Material icons guide - includes instructions for getting individual SVGs and installing them via `npm`.
 * The Google Fonts [Roboto page](https://fonts.google.com/specimen/Roboto) - here you can view the font but only download old style TTF files rather than web optimized WOFF2.
 
 The easiest way to get both icons and fonts is to install them using `npm`:
@@ -173,7 +173,7 @@ Material icons
 
 For whatever reason the Material icons [reference page](https://material.io/resources/icons/) does **not** include all available icons. There are some notable omissions, e.g. the icons associated with copy and paste (I commented on this in material-design-icons issue [#969](https://github.com/google/material-design-icons/issues/968#issuecomment-602195994)).
 
-The material-design-icons includes a directory of [reference pages](https://github.com/google/material-design-icons/tree/master/sprites/svg-sprite) for all the sprites they provide. Oddly, I can't find these served in a directly viewable form (on GitHub you can just view the raw HTML) so you have to use something [raw.githack.com](https://raw.githack.com/) to view them like so:
+The material-design-icons repo includes a directory of [reference pages](https://github.com/google/material-design-icons/tree/master/sprites/svg-sprite) for all the sprites they provide. Oddly, I can't find these served in a directly viewable form (on GitHub you can just view the raw HTML) so you have to use something like [raw.githack.com](https://raw.githack.com/) to view them like so:
 
 * [Action](https://raw.githack.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-action.html).
 * [Alert](https://raw.githack.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-alert.html).
@@ -200,9 +200,9 @@ Others however are missing, e.g. on the Devices page, you can find various signa
 
     <mat-icon>signal_wifi_4_bar</mat-icon>
 
-According to the `MatIcon` [documentation](https://material.angular.io/components/icon/api#MatIcon) its the text associated with a ligature that determines the name you use with the `mat-icon` tag. I haven't found a simple way to dump these names for a font file but you can see them in the [`codepoints`](https://github.com/google/material-design-icons/blob/master/iconfont/codepoints) file in the material-design-icons repo. Here you can easily see that `content_copy` and `signal_wifi_4_bar` are present but `signal_wifi_0_bar` is not.
+According to the `MatIcon` [documentation](https://material.angular.io/components/icon/api#MatIcon) it's the text associated with a ligature that determines the name you use with the `mat-icon` tag. I haven't found a simple way to dump these names for a font file but you can see them in the [`codepoints`](https://github.com/google/material-design-icons/blob/master/iconfont/codepoints) file in the material-design-icons repo. Here you can easily see that `content_copy` and `signal_wifi_4_bar` are present but `signal_wifi_0_bar` is not.
 
-For sprites that aren't available in the Material icons font, you can find (as noted [here](http://google.github.io/material-design-icons/#icon-images-for-the-web)) the appropriate SVG icons under `*/svg/production` in the material-design-icon [repo](https://github.com/google/material-design-icons/). E.g. for `signal_wifi_0_bar` is under `device/svg/production` as `ic_signal_wifi_0_bar_24px.svg`. There are also 18px and 48px variants but 24px is the standard size used by `mat-icon`.
+For sprites that aren't available in the Material icons font, you can find (as noted [here](http://google.github.io/material-design-icons/#icon-images-for-the-web)) the appropriate SVG icons under `*/svg/production` in the material-design-icon [repo](https://github.com/google/material-design-icons/). E.g. `signal_wifi_0_bar` is under `device/svg/production` as `ic_signal_wifi_0_bar_24px.svg`. There are also 18px and 48px variants but 24px is the standard size used by `mat-icon`.
 
 To use such icons, I copied them into my project like so:
 
@@ -211,9 +211,9 @@ To use such icons, I copied them into my project like so:
 
 And then I registered them with `MatIconRegistry` in a fashion similar to that described in this [tutorial](https://dev.to/elasticrash/using-custom-made-svg-icons-through-the-angular-material-library-2pif) by Stefanos Kouroupis.
 
-**Update:** registering icons with `MatIconRegistry` only tells it where the icons are, they are only really loaded if they're actually used somewhere. Usually, this is a positive. But loading the individual SVG files one by one from an ESP32 results in the icons slowly popping into existence.
+**Update:** registering icons with `MatIconRegistry` only tells it where the icons are, they are only really loaded if they're actually used somewhere. Usually, this is a positive. But loading the individual SVG files one by one from a MicroPython device results in the icons slowly popping into existence.
 
-So I conbined them into an icon set - I couldn't find any good documentation on how to do this and there's surprising variation in the layout of the SVG icon sets out there (they also seem to have rather gone out of style, with icon fonts appearing to be more common these days). In the end, I just looked at various examples and went with the layout that involved the least modification to the existing SVG data.
+So I combined them into an icon set - I couldn't find any good documentation on how to do this and there's surprising variation in the layout of the SVG icon sets out there (they also seem to have rather gone out of style, with icon fonts appearing to be more common these days). In the end, I just looked at various examples and went with the layout that involved the least modification to the existing SVG data.
 
 Essentially I did:
 
@@ -279,7 +279,7 @@ The `type` of `button` elements is `submit` by default, this caused me a lot of 
 
 **Update:** initially I used the HTML attributes `required` and `minlength` to specify validity for the password field. However clicking on the visibility icon in the field caused its validity to be updated immediately (even though from a user point of view you haven't left the field) and it was visually marked in red as invalid (if you hadn't already entered the minimum required number of characters). So in the end I removed the `required` and `minlength` attributes. The field is now never marked as invalid and the connect button (that used to become enabled once the overall form stopped being invalid) is now disabled via a simple check on the password property of the underlying component.
 
-Note: Angular has two different approaches to handling forms - template-driven and reactive. Template-driven forms use the standard HTML attributes, like `minlength` etc., to establish validity. While initially simple this doesn't work out so well once things get a little bit complicated -for this you need reactive forms where the validity is configured in the underlying component class. See the Angular [forms guide](https://angular.io/guide/forms-overview) for more.
+Note: Angular has two different approaches to handling forms - template-driven and reactive. Template-driven forms use the standard HTML attributes, like `minlength` etc., to establish validity. While initially simple, this doesn't work out so well once things get a little bit complicated - for this you need reactive forms where the validity is configured in the underlying component class. See the Angular [forms guide](https://angular.io/guide/forms-overview) for more.
 
 Toggling password visibility
 ----------------------------
