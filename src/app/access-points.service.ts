@@ -25,15 +25,15 @@ export class AccessPointsService {
   }
 
   passwordConnect(point: AccessPoint, password: string): Observable<ConnectResponse> {
-    return this.connect(point, { 'password': password });
+    return this.connect(point, { password });
   }
 
   private connect(point: AccessPoint, extraParams: Record<string, string> = {}): Observable<ConnectResponse> {
     let params = new HttpParams().set('ssid', point.ssid);
 
-    for (let key in extraParams) {
+    Object.keys(extraParams).forEach(key => {
       params = params.set(key, extraParams[key]); // Each call to `set` returns a _new_ object.
-    }
+    });
 
     return this.http.post<any>(CONNECT_URL, params).pipe(
       tap(response => console.log('Connect response:', response)),

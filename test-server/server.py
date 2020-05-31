@@ -34,12 +34,12 @@ def access_points():
     lower = upper // 2
     size = randint(lower, upper)
     # Return a random sample of elements from _AP_LIST.
-    list = sample(_AP_LIST, size)
-    # Duplicate SSID seem to be quite common in practice, do deliberately duplicate
+    aps = sample(_AP_LIST, size)
+    # Duplicate SSIDs seem to be quite common in practice, so deliberately duplicate
     # all SSIDs, giving each duplicate a slightly lower RSSI value than the original.
-    list += [(p[0], p[1] - 1, p[2]) for p in list]
-    list = [(p[0].decode("utf-8"), p[1], p[2]) for p in list]
-    return jsonify(list)
+    aps += [(p[0], p[1] - 1, p[2]) for p in aps]
+    aps = [(p[0].decode("utf-8"), p[1], p[2]) for p in aps]
+    return jsonify(aps)
 
 
 _AP_LIST = [
@@ -71,7 +71,7 @@ _AP_LIST += [
 
 
 # With the non-open dummy APs you can signal with the password what response you want.
-# For the open APs this isn't possible, so two of them just always response FORBIDDEN.
+# For the open APs this isn't possible, so two of them just always respond with FORBIDDEN.
 _FORBIDDEN_OPEN_APS = [
     b"JB_40",
     unhexlify(b"ed959ceab5adec96b42f")  # Korean
@@ -90,9 +90,9 @@ def access_point():
     print("Received request to connect to {} ".format(ssid), end="")
     password = request.form.get("password")
     if password:
-        print("with password \"{}\"".format(password))
+        print('with password "{}"'.format(password))
     else:
-        print("without password");
+        print("without password")
     ssid = ssid.encode("utf-8")
     # Make sure the SSID didn't get mangled going from here to client and back.
     found = next((True for point in _AP_LIST if point[0] == ssid), False)
@@ -102,7 +102,6 @@ def access_point():
     sleep(2)  # Simulate delay in doing real connect.
 
     if not password:
-        from binascii import hexlify
         forbidden = next((True for point in _FORBIDDEN_OPEN_APS if point == ssid), False)
         if forbidden:
             abort(HTTPStatus.FORBIDDEN)
@@ -146,9 +145,9 @@ def alive():
     fire_at = datetime.now() + timedelta(seconds=timeout)
     global timeout_job
     if timeout_job:
-        timeout_job.reschedule('date', run_date=fire_at)
+        timeout_job.reschedule("date", run_date=fire_at)
     else:
-        timeout_job = scheduler.add_job(timed_out, 'date', run_date=fire_at)
+        timeout_job = scheduler.add_job(timed_out, "date", run_date=fire_at)
     return "", HTTPStatus.NO_CONTENT
 
 

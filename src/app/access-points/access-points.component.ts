@@ -50,7 +50,7 @@ export class AccessPointsComponent implements OnInit {
       exhaustMap(() => this.accessPointsService.getAccessPoints().pipe(
         finalize(() => this.spinnerService.hide()) // Only actually needed for very first request.
       ))
-    ).subscribe(points => this.points = this.sort(points)); 
+    ).subscribe(points => this.points = this.sort(points));
 
     this.getAccessPoints = () => s.next();
   }
@@ -78,7 +78,7 @@ export class AccessPointsComponent implements OnInit {
       // to this access point, to disabled but this made the button look more
       // highlighted than disabled. Now just the red lock icon is all that flags up
       // these "problem" access points.
-    } else if (point.authmode == AuthMode.OPEN) {
+    } else if (point.authmode === AuthMode.OPEN) {
       this.openConnect(point);
     } else {
       this.openAuthDialog(point);
@@ -168,15 +168,15 @@ export class AccessPointsComponent implements OnInit {
   }
 
   isProtected(authmode: AuthMode): boolean {
-    return authmode != AuthMode.OPEN;
+    return authmode !== AuthMode.OPEN;
   }
 
   lockColor(authmode: AuthMode): string {
-    return this.isDisabled(authmode) ? "warn" : "basic";
+    return this.isDisabled(authmode) ? 'warn' : 'basic';
   }
 
   isDisabled(authmode: AuthMode): boolean {
     // Currently ENTERPRISE isn't supported.
-    return authmode == AuthMode.ENTERPRISE;
+    return authmode === AuthMode.ENTERPRISE;
   }
 }

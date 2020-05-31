@@ -13,6 +13,6 @@ export class ResultDialogComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: ConnectResponse) { }
 
   hasPassword(authmode: AuthMode): boolean {
-    return authmode != AuthMode.OPEN;
+    return authmode !== AuthMode.OPEN;
   }
 }
