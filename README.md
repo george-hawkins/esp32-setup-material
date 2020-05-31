@@ -55,20 +55,20 @@ It should return a JSON formatted list of dummy access points (with a delay of a
 Building and serving the frontend
 ---------------------------------
 
+If you've just set up the test server then leave it running, open a new terminal session and make sure you're in the project's root directory (and not in the `test-server` subdirectory).
+
 The frontend requires [npm](https://en.wikipedia.org/wiki/Npm_(software)) and the [Angular CLI](https://cli.angular.io/), so first install the latest versions of both:
 
     $ npm install -g npm
     $ npm --version
     6.14.4
     $ npm install -g @angular/cli
-    $ ng --version
-    ...
-    Angular CLI: 9.1.0
-    Node: 13.12.0
 
 The above commands work both for initial installation and for upgrading.
 
 Note: the `-g` means global (and is used for installing command line tools). If `npm` complains that it can't install into some global system location, I strongly suggest that instead of running these commands with `sudo`, you switch to an approach that does not require root access, e.g. by using `nvm` (as described in my notes on [installing  `node`](https://github.com/george-hawkins/snippets/blob/master/install-node-and-npm.md)) or by setting the `npm` `prefix` value (as described [here](https://github.com/sindresorhus/guides/blob/master/npm-global-without-sudo.md)).
+
+Normally, I like to check the version of things after installing them. However, if you try this with `ng`, it will fail as it depends on the `node_modules` directory which isn't present until the next step is completed (this is a known bug - see [#10917](https://github.com/angular/angular-cli/issues/10917)).
 
 Now that things are setup, you can install the dependencies defined in [`package.json`](package.json):
 
@@ -76,7 +76,14 @@ Now that things are setup, you can install the dependencies defined in [`package
 
 This will create a subdirectory called `node_modules` containing a really surprising number of direct and transient (indirect) dependencies.
 
-Now you can run a development server that will serve the frontend (and automatically route through to the Python based test server for backend requests):
+Now, we can check the `ng` version:
+
+    $ ng --version
+    ...
+    Angular CLI: 9.1.0
+    Node: 13.12.0
+
+Installation is complete and you can now run a development server that will serve the frontend (and automatically route through to the Python based test server for backend requests):
 
     $ ng serve --open
 
