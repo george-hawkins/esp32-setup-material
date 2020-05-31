@@ -228,6 +228,53 @@ Essentially I did:
 
 And updated `src/app/icon.service.ts` to use `MatIconRegistry.addSvgIconSet` rather than `MatIconRegistry.addSvgIcon`.
 
+Viewport tag on iOS
+-------------------
+
+When you generate a project with the Angular CLI, it creates an [`index.html`](../src/index.html) that contains the following `<meta>` tag:
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+This works fine on Android and on large screen iOS devices like the iPad. However, it has issues on devices with a smaller screen. In the material-wifi-setup app, Safari helpfully zooms in when the password entry dialog pops up. The zooming is triggered by the text input field in the dialog - if the font size for the input text is less than 16px, Safari automatically zooms in so you can see the text that you're entering more easily. This is a useful feature, the problem is that it also zooms the background, i.e. the rows showing all the visible WiFi access points - this is OK, when the dialog is visible, but when the dialog is closed the the background remains zoomed. This spoils the app-like feel of the whole thing - after zooming the lock icons are off screen and you have to scroll about to see everything.
+
+There's a staggering number of web pages on how to address this, the vast majority pointing out that approach X was what you used to have to do, but X no longer works and you should now do Y, with other pages insisting that Y is completely the wrong approach and reflects a misunderstanding of the underlying issue.
+
+Many sites mention setting `user-scalable=no` but enough other more credible sources argue that this isn't the way to go (though in the end, I went for something very similar).
+
+I initially thought the issue was to with dialog boxes, as it's the appearance of the password dialog that triggers the issue in this app, but it really does seem to be font size of the field used for inputing the password.  The default Angular styles means this defaults to 14px. Simply changing the styling would probably resolve things.
+
+However, I didn't want to fiddle with the styling to keep iOS happy. Using the simulator that comes with Xcode 11, I tried out almost every suggested `viewport` variant I came across on the web with the _iPhone SE (2nd generation)_ (I also tried them with the _iPad (7th generation)_ and the _iPhone 11_ but quickly found that the larger the screen the less likely one was to trigger this issue).
+
+So I tried:
+
+* `width=device-width, initial-scale=1` - i.e. the initial setup that worked fine on Android, as noted the rows of APs remain zoomed after dialog close.
+* `width=320, initial-scale=1` - has the same behavior.
+* `width=device-width, initial-scale=0.86, maximum-scale=3.0, minimum-scale=0.86` - this is the strangest looking `viewport` content that I tried (it comes from the MDN page linked to below) but it also has the same behavior.
+* `width=320` - looks good on iPhones and zooming is disabled, works on iPad too but everything looks oversized (i.e. it looks like the iPhone content scaled up to fit the wider iPad screen).
+* `width=720` - with 720 it looks good on iPad but on iPhones everything has been scaled down (so text etc. looks tiny) and it super zooms when the dialog opens (to the extent that you're left thinking the background has disappeared if it zooms in on a blank area).
+* `width=720, maximum-scale=1` - behaves like `width=720` on iPhones and looks worse that `width=720` on iPad (everything renders is 720 wide rectangle that is **not** scaled up to take advantage of the available space).
+* `initial-scale=1, maximum-scale=1` - this suggestion is from MDN and finally gets us close to where we want to be, looks good on iPhone and iPad and disables zooming.
+* `width=device-width, maximum-scale=1` - ditto.
+* `width=device-width, initial-scale=1, maximum-scale=1` - ditto.
+
+So `maximum-scale=1` seems to get us closest to what we want. It does disable features that are useful, it disables zooming in on text fields (which would be nice if it weren't for the fact that things are left zoomed once the text field is gone) and it disables user pinching and zooming. As you don't generally get pinching and zooming in a native app for lists and dialogs, this is OK for this setup but you could imagine scenarios where it would be an issue. It's hard to see that expanding on any of the other attempts would get you further, e.g. `width=x` where `x` was programmatically derived based on the device only stops zooming if the resulting scaling means that the 14px of the password field effectively becomes 16px (in which case you might as well have done this via CSS). Perhaps one could programmatically track the zooming that occurs when the dialog is shown and programmatically reverse the zoom once hidden.
+
+In the end, I went with the following as it feels closest to the original, simply adding an additional property to suppress zooming:
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+If repeating these experiments with the simulator there are some important things to note:
+
+* Conduct each experiment in a private browser tab, if you don't do this, the browser hangs on long grim death to what it's got even if you've changed the `<meta>` tag. Close the existing tab and open a new one for each new experiment. Surely there's an easier way to effectively do a hard refresh? No, this is actually the highest voted [answer](https://apple.stackexchange.com/a/195353) relating to this on the Apple StackExchange.
+* Check if rotating the screen affects things, I tried this both while showing the dialog and after closing it. For this particuar problem, rotation never made things better or worse but apparently it's a situation in which scaling and similar issues often appear.
+
+The most relevant pages I found regarding all this are:
+
+* SO ["Disable Auto Zoom in Input “Text” tag - Safari on iPhone"](https://stackoverflow.com/q/2989263/245602) - includes no end of approaches, mainly CSS or `viewport` based.
+* MDN ["Using the viewport meta tag to control layout on mobile browsers"](https://developer.mozilla.org/en-US/docs/Mozilla/Mobile/Viewport_meta_tag) - in particular the "viewport width and screen width" section.
+* Allen Pike's ["Choosing a viewport for iPad sites"](https://allenpike.com/2010/choosing-a-viewport-for-ipad-sites) - linked to from the MDN page, this discusses some approaches. Note that this article is from 2010 and Apple seem to have changed how they interpret `viewport` content values multiple times over the years.
+* WebDesignerWall ["Viewport Meta Tag For Non-Responsive Design"](https://webdesignerwall.com/tutorials/viewport-meta-tag-for-non-responsive-design) - the material-wifi-setup app is **not** using responsive layout so articles, like this, that cover how the `viewport` behaves in non-responsive setups, are the most relevant. This discusses why it might not be a good idea to used `initial-scale=1` and `maximum-scale=1` with such a setup (even though, in the end, I used both).
+
 Creating a minimal initial Angular project
 ------------------------------------------
 
