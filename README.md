@@ -66,11 +66,11 @@ The frontend requires [npm](https://en.wikipedia.org/wiki/Npm_(software)) and th
 
 The above commands work both for initial installation and for upgrading.
 
-Note: the `-g` means global (and is used for installing command line tools). If `npm` complains that it can't install into some global system location, I strongly suggest that instead of running these commands with `sudo`, you switch to an approach that does not require root access, e.g. by using `nvm` (as described in my notes on [installing  `node`](https://github.com/george-hawkins/snippets/blob/master/install-node-and-npm.md)) or by setting the `npm` `prefix` value (as described [here](https://github.com/sindresorhus/guides/blob/master/npm-global-without-sudo.md)).
+Note: the `-g` means global (and is used for installing command-line tools). If `npm` complains that it can't install into some global system location, I strongly suggest that instead of running these commands with `sudo`, you switch to an approach that does not require root access, e.g. by using `nvm` (as described in my notes on [installing  `node`](https://github.com/george-hawkins/snippets/blob/master/install-node-and-npm.md)) or by setting the `npm` `prefix` value (as described [here](https://github.com/sindresorhus/guides/blob/master/npm-global-without-sudo.md)).
 
 Normally, I like to check the version of things after installing them. However, if you try this with `ng`, it will fail as it depends on the `node_modules` directory which isn't present until the next step is completed (this is a known bug - see [#10917](https://github.com/angular/angular-cli/issues/10917)).
 
-Now that things are setup, you can install the dependencies defined in [`package.json`](package.json):
+Now that things are set up, you can install the dependencies defined in [`package.json`](package.json):
 
     $ npm install
 
@@ -83,7 +83,7 @@ Now, we can check the `ng` version:
     Angular CLI: 9.1.0
     Node: 13.12.0
 
-Installation is complete and you can now run a development server that will serve the frontend (and automatically route through to the Python based test server for backend requests):
+Installation is complete and you can now run a development server that will serve the frontend (and automatically route through to the Python-based test server for backend requests):
 
     $ ng serve --open
 
@@ -106,7 +106,7 @@ To build a set of files suitable for production deployment:
 Supported browser versions
 --------------------------
 
-Currently the [`browserlist`](browserlist) file for this project only specifies browsers that support es2015, i.e. a relatively modern version of JavaScript. This includes the latest versions of Chrome, Safari, Firefox and Edge - and their iOS and Android variants - but excludes Internet Explorer and the kind of browsers typically found on feature phones. For more about this, see [here](docs/NOTES.md#ng-build-and-es5).
+Currently, the [`browserlist`](browserlist) file for this project only specifies browsers that support es2015, i.e. a relatively modern version of JavaScript. This includes the latest versions of Chrome, Safari, Firefox and Edge - and their iOS and Android variants - but excludes Internet Explorer and the kind of browsers typically found on feature phones. For more about this, see [here](docs/NOTES.md#ng-build-and-es5).
 
 Notes
 -----

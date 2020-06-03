@@ -33,7 +33,7 @@ Now the project can be built, served and automatically opened in the current bro
 
     $ ng serve --open
 
-By default a canned next-steps page opens, but if you've already minimized things, as I did, then a very unexciting empty page opens. However, if you keep it open it will automatically update to show changes, as you make them, to the project.
+By default, a canned next-steps page opens, but if you've already minimized things, as I did, then a very unexciting empty page opens. However, if you keep it open it will automatically update to show changes, as you make them, to the project.
 
 The automatic updating only goes so far, sometimes you'll see errors that aren't really errors - you just have to kill and restart `ng serve`.
 
@@ -64,7 +64,7 @@ Test backend server
 
 The intention is that the frontend created here is served out by the same server that provides the backend with which it communicates (using [REST](https://en.wikipedia.org/wiki/Representational_state_transfer)).
 
-However during development it's more convenient to have a separate test-server running as the backend (as described in the main [`README`](../README.md)).
+However, during development, it's more convenient to have a separate test-server running as the backend (as described in the main [`README`](../README.md)).
 
 This is achieved by adding [`src/proxy.conf.json`](../src/proxy.conf.json) and adding a `proxyConfig` entry to [`angular.json`](../angular.json) as described in the ["Proxying to a backend server"](https://angular.io/guide/build#proxying-to-a-backend-server) section of the Angular development workflow guide.
 
@@ -125,7 +125,7 @@ So I replaced these stylesheets in `src/index.html` with static self-hosted vers
 
 The `USER_AGENT` string above was derived from my actual browser's user-agent and was the minimum necessary to get Google to serve the WOFF2 versions of the requested files.
 
-Then I removed the non-latin definitions from `src/assets/css/typeface-roboto.css` (as is also done in npm installable [typeface-roboto](https://github.com/KyleAMathews/typefaces/tree/master/packages/roboto)).
+Then I removed the non-Latin definitions from `src/assets/css/typeface-roboto.css` (as is also done in npm installable [typeface-roboto](https://github.com/KyleAMathews/typefaces/tree/master/packages/roboto)).
 
 And finally I replaced the WOFF2 URLs in `material-icons.css` and `typeface-roboto.css` with self-hosted versions:
 
@@ -138,7 +138,7 @@ Note that while the CSS files can reference lots of fonts and icon URLs, these a
 
 WOFF2 files are _already_ compressed and even the entire Angular icon set comes in at just 60KiB.
 
-**Update:** in the end, I removed `MaterialIcons-Regular.woff2` and instead just added only the icons I used to `icons.svg` (see section on this below). I would **not** do this in any situation other than for the extremely resource limited MicroPython setup.
+**Update:** in the end, I removed `MaterialIcons-Regular.woff2` and instead just added only the icons I used to `icons.svg` (see the section on this below). I would **not** do this in any situation other than for the extremely resource-limited MicroPython setup.
 
 Self-hosting icon and font files - the details
 ----------------------------------------------
@@ -148,7 +148,7 @@ As noted above, I went with a fairly simple approach to self-hosting the icon an
 Google covers getting the raw assets here:
 
 * The ["Getting icons"](http://google.github.io/material-design-icons/#getting-icons) section of the Material icons guide - includes instructions for getting individual SVGs and installing them via `npm`.
-* The Google Fonts [Roboto page](https://fonts.google.com/specimen/Roboto) - here you can view the font but only download old style TTF files rather than web optimized WOFF2.
+* The Google Fonts [Roboto page](https://fonts.google.com/specimen/Roboto) - here you can view the font but only download old style TTF files rather than web-optimized WOFF2.
 
 The easiest way to get both icons and fonts is to install them using `npm`:
 
@@ -166,12 +166,12 @@ Over time there have been various ways to pull these into your Angular project, 
 
 Note: the Angular build process uses [postcss-import](https://github.com/postcss/postcss-import) to process these import statements and inline the referenced CSS. If you're wondering at the long explicit path for `material-design-icons` vs the much shorter import for `typeface-roboto`, it's because postcss-import can find the CSS file automatically if the package has a particular expected structure - `typeface-roboto` has this structure and `material-design-icons` does not.
 
-In the end though I went with a simpler but more mechanical approach to all this, that's covered above.
+In the end though, I went with a simpler but more mechanical approach to all this, that's covered above.
 
 Material icons
 --------------
 
-For whatever reason the Material icons [reference page](https://material.io/resources/icons/) does **not** include all available icons. There are some notable omissions, e.g. the icons associated with copy and paste (I commented on this in material-design-icons issue [#969](https://github.com/google/material-design-icons/issues/968#issuecomment-602195994)).
+For whatever reason, the Material icons [reference page](https://material.io/resources/icons/) does **not** include all available icons. There are some notable omissions, e.g. the icons associated with copy and paste (I commented on this in material-design-icons issue [#969](https://github.com/google/material-design-icons/issues/968#issuecomment-602195994)).
 
 The material-design-icons repo includes a directory of [reference pages](https://github.com/google/material-design-icons/tree/master/sprites/svg-sprite) for all the sprites they provide. Oddly, I can't find these served in a directly viewable form (on GitHub you can just view the raw HTML) so you have to use something like [raw.githack.com](https://raw.githack.com/) to view them like so:
 
@@ -196,11 +196,11 @@ Some of these sprites are available in the standard Material icons font file des
 
     <mat-icon>content_copy</mat-icon>
 
-Others however are missing, e.g. on the Devices page, you can find various signal strength sprites - `signal_wifi_0_bar` to `signal_wifi_4_bar` - however only the 4 bar variant is available in the font file:
+Others, however, are missing, e.g. on the Devices page, you can find various signal strength sprites - `signal_wifi_0_bar` to `signal_wifi_4_bar` - however only the 4 bar variant is available in the font file:
 
     <mat-icon>signal_wifi_4_bar</mat-icon>
 
-According to the `MatIcon` [documentation](https://material.angular.io/components/icon/api#MatIcon) it's the text associated with a ligature that determines the name you use with the `mat-icon` tag. I haven't found a simple way to dump these names for a font file but you can see them in the [`codepoints`](https://github.com/google/material-design-icons/blob/master/iconfont/codepoints) file in the material-design-icons repo. Here you can easily see that `content_copy` and `signal_wifi_4_bar` are present but `signal_wifi_0_bar` is not.
+According to the `MatIcon` [documentation](https://material.angular.io/components/icon/api#MatIcon), it's the text associated with a ligature that determines the name you use with the `mat-icon` tag. I haven't found a simple way to dump these names for a font file but you can see them in the [`codepoints`](https://github.com/google/material-design-icons/blob/master/iconfont/codepoints) file in the material-design-icons repo. Here you can easily see that `content_copy` and `signal_wifi_4_bar` are present but `signal_wifi_0_bar` is not.
 
 For sprites that aren't available in the Material icons font, you can find (as noted [here](http://google.github.io/material-design-icons/#icon-images-for-the-web)) the appropriate SVG icons under `*/svg/production` in the material-design-icon [repo](https://github.com/google/material-design-icons/). E.g. `signal_wifi_0_bar` is under `device/svg/production` as `ic_signal_wifi_0_bar_24px.svg`. There are also 18px and 48px variants but 24px is the standard size used by `mat-icon`.
 
@@ -211,7 +211,7 @@ To use such icons, I copied them into my project like so:
 
 And then I registered them with `MatIconRegistry` in a fashion similar to that described in this [tutorial](https://dev.to/elasticrash/using-custom-made-svg-icons-through-the-angular-material-library-2pif) by Stefanos Kouroupis.
 
-**Update:** registering icons with `MatIconRegistry` only tells it where the icons are, they are only really loaded if they're actually used somewhere. Usually, this is a positive. But loading the individual SVG files one by one from a MicroPython device results in the icons slowly popping into existence.
+**Update:** registering icons with `MatIconRegistry` only tells it where the icons are, they are only really loaded if they're actually used somewhere. Usually, this is a positive. But loading the individual SVG files one by one, from a MicroPython device, results in the icons slowly popping into existence.
 
 So I combined them into an icon set - I couldn't find any good documentation on how to do this and there's surprising variation in the layout of the SVG icon sets out there (they also seem to have rather gone out of style, with icon fonts appearing to be more common these days). In the end, I just looked at various examples and went with the layout that involved the least modification to the existing SVG data.
 
@@ -235,13 +235,13 @@ When you generate a project with the Angular CLI, it creates an [`index.html`](.
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-This works fine on Android and on large screen iOS devices like the iPad. However, it has issues on devices with a smaller screen. In the material-wifi-setup app, Safari helpfully zooms in when the password entry dialog pops up. The zooming is triggered by the text input field in the dialog - if the font size for the input text is less than 16px, Safari automatically zooms in so you can see the text that you're entering more easily. This is a useful feature, the problem is that it also zooms the background, i.e. the rows showing all the visible WiFi access points - this is OK, when the dialog is visible, but when the dialog is closed the the background remains zoomed. This spoils the app-like feel of the whole thing - after zooming the lock icons are off screen and you have to scroll about to see everything.
+This works fine on Android and on large-screen iOS devices like the iPad. However, it has issues on devices with a smaller screen. In the material-wifi-setup app, Safari helpfully zooms in when the password entry dialog pops up. The zooming is triggered by the text input field in the dialog - if the font size for the input text is less than 16px, Safari automatically zooms in so you can see the text that you're entering more easily. This is a useful feature, the problem is that it also zooms the background, i.e. the rows showing all the visible WiFi access points - this is OK when the dialog is visible, but when the dialog is closed the background remains zoomed. This spoils the app-like feel of the whole thing - after zooming the lock icons are off-screen and you have to scroll about to see everything.
 
 There's a staggering number of web pages on how to address this, the vast majority pointing out that approach X was what you used to have to do, but X no longer works and you should now do Y, with other pages insisting that Y is completely the wrong approach and reflects a misunderstanding of the underlying issue.
 
 Many sites mention setting `user-scalable=no` but enough other more credible sources argue that this isn't the way to go (though in the end, I went for something very similar).
 
-I initially thought the issue was to with dialog boxes, as it's the appearance of the password dialog that triggers the issue in this app, but it really does seem to be font size of the field used for inputing the password.  The default Angular styles means this defaults to 14px. Simply changing the styling would probably resolve things.
+I initially thought the issue was to with dialog boxes, as it's the appearance of the password dialog that triggers the issue in this app, but it really does seem to be font size of the field used for inputting the password. The default Angular styles mean this defaults to 14px. Simply changing the styling would probably resolve things.
 
 However, I didn't want to fiddle with the styling to keep iOS happy. Using the simulator that comes with Xcode 11, I tried out almost every suggested `viewport` variant I came across on the web with the _iPhone SE (2nd generation)_ (I also tried them with the _iPad (7th generation)_ and the _iPhone 11_ but quickly found that the larger the screen the less likely one was to trigger this issue).
 
@@ -251,13 +251,13 @@ So I tried:
 * `width=320, initial-scale=1` - has the same behavior.
 * `width=device-width, initial-scale=0.86, maximum-scale=3.0, minimum-scale=0.86` - this is the strangest looking `viewport` content that I tried (it comes from the MDN page linked to below) but it also has the same behavior.
 * `width=320` - looks good on iPhones and zooming is disabled, works on iPad too but everything looks oversized (i.e. it looks like the iPhone content scaled up to fit the wider iPad screen).
-* `width=720` - with 720 it looks good on iPad but on iPhones everything has been scaled down (so text etc. looks tiny) and it super zooms when the dialog opens (to the extent that you're left thinking the background has disappeared if it zooms in on a blank area).
-* `width=720, maximum-scale=1` - behaves like `width=720` on iPhones and looks worse that `width=720` on iPad (everything renders is 720 wide rectangle that is **not** scaled up to take advantage of the available space).
+* `width=720` - with 720 it looks good on iPad but on iPhones, everything has been scaled down (so text etc. looks tiny) and it super zooms when the dialog opens (to the extent that you're left thinking the background has disappeared if it zooms in on a blank area).
+* `width=720, maximum-scale=1` - behaves like `width=720` on iPhones and looks worse than `width=720` on iPad (everything renders is 720 wide rectangle that is **not** scaled up to take advantage of the available space).
 * `initial-scale=1, maximum-scale=1` - this suggestion is from MDN and finally gets us close to where we want to be, looks good on iPhone and iPad and disables zooming.
 * `width=device-width, maximum-scale=1` - ditto.
 * `width=device-width, initial-scale=1, maximum-scale=1` - ditto.
 
-So `maximum-scale=1` seems to get us closest to what we want. It does disable features that are useful, it disables zooming in on text fields (which would be nice if it weren't for the fact that things are left zoomed once the text field is gone) and it disables user pinching and zooming. As you don't generally get pinching and zooming in a native app for lists and dialogs, this is OK for this setup but you could imagine scenarios where it would be an issue. It's hard to see that expanding on any of the other attempts would get you further, e.g. `width=x` where `x` was programmatically derived based on the device only stops zooming if the resulting scaling means that the 14px of the password field effectively becomes 16px (in which case you might as well have done this via CSS). Perhaps one could programmatically track the zooming that occurs when the dialog is shown and programmatically reverse the zoom once hidden.
+So `maximum-scale=1` seems to get us closest to what we want. It does disable useful features - it disables zooming in on text fields (which would be nice if it weren't for the fact that things are left zoomed once the text field is gone) and it disables user pinching and zooming. As you don't generally get pinching and zooming in a native app for lists and dialogs, this is OK for this setup but you could imagine scenarios where it would be an issue. It's hard to see that expanding on any of the other attempts would get you further, e.g. `width=x` where `x` was programmatically derived based on the device only stops zooming if the resulting scaling means that the 14px of the password field effectively becomes 16px (in which case you might as well have done this via CSS). Perhaps one could programmatically track the zooming that occurs when the dialog is shown and programmatically reverse the zoom once hidden.
 
 In the end, I went with the following as it feels closest to the original, simply adding an additional property to suppress zooming:
 
@@ -266,19 +266,19 @@ In the end, I went with the following as it feels closest to the original, simpl
 If repeating these experiments with the simulator there are some important things to note:
 
 * Conduct each experiment in a private browser tab, if you don't do this, the browser hangs on long grim death to what it's got even if you've changed the `<meta>` tag. Close the existing tab and open a new one for each new experiment. Surely there's an easier way to effectively do a hard refresh? No, this is actually the highest voted [answer](https://apple.stackexchange.com/a/195353) relating to this on the Apple StackExchange.
-* Check if rotating the screen affects things, I tried this both while showing the dialog and after closing it. For this particuar problem, rotation never made things better or worse but apparently it's a situation in which scaling and similar issues often appear.
+* Check if rotating the screen affects things, I tried this both while showing the dialog and after closing it. For this particular problem, rotation never made things better or worse but apparently, it's a situation in which scaling and similar issues often appear.
 
 The most relevant pages I found regarding all this are:
 
 * SO ["Disable Auto Zoom in Input “Text” tag - Safari on iPhone"](https://stackoverflow.com/q/2989263/245602) - includes no end of approaches, mainly CSS or `viewport` based.
-* MDN ["Using the viewport meta tag to control layout on mobile browsers"](https://developer.mozilla.org/en-US/docs/Mozilla/Mobile/Viewport_meta_tag) - in particular the "viewport width and screen width" section.
-* Allen Pike's ["Choosing a viewport for iPad sites"](https://allenpike.com/2010/choosing-a-viewport-for-ipad-sites) - linked to from the MDN page, this discusses some approaches. Note that this article is from 2010 and Apple seem to have changed how they interpret `viewport` content values multiple times over the years.
+* MDN ["Using the viewport meta tag to control layout on mobile browsers"](https://developer.mozilla.org/en-US/docs/Mozilla/Mobile/Viewport_meta_tag) - in particular, the "viewport width and screen width" section.
+* Allen Pike's ["Choosing a viewport for iPad sites"](https://allenpike.com/2010/choosing-a-viewport-for-ipad-sites) - linked to from the MDN page, this discusses some approaches. Note that this article is from 2010 and Apple seems to have changed how they interpret `viewport` content values multiple times over the years.
 * WebDesignerWall ["Viewport Meta Tag For Non-Responsive Design"](https://webdesignerwall.com/tutorials/viewport-meta-tag-for-non-responsive-design) - the material-wifi-setup app is **not** using responsive layout so articles, like this, that cover how the `viewport` behaves in non-responsive setups, are the most relevant. This discusses why it might not be a good idea to used `initial-scale=1` and `maximum-scale=1` with such a setup (even though, in the end, I used both).
 
 Creating a minimal initial Angular project
 ------------------------------------------
 
-You can create a new Angular project with `ng new`. `ng new` has a `--minimal` option, but it's a bit too minimal - in particular it excludes `tslint`.
+You can create a new Angular project with `ng new`. `ng new` has a `--minimal` option, but it's a bit too minimal - in particular, it excludes `tslint`.
 
 So I compared two projects created as shown:
 
@@ -318,13 +318,13 @@ Adding validation requirements to an input field is easy:
 
     <input matInput required minlength="8" ...>
 
-However it took me quite some time to work out that for the validation to work the field _must_ be named:
+However, it took me quite some time to work out that for the validation to work the field _must_ be named:
 
     <input matInput name="password" required minlength="8" ...>
 
 The `type` of `button` elements is `submit` by default, this caused me a lot of confusion as initially, I didn't set the `type` attribute for the CANCEL and CONNECT buttons in my dialog. When I found that pressing return caused the dialog to close even if a valid password hadn't been entered I tried setting the `type` of the CONNECT button to `submit` but this changed nothing. It turned out pressing return was triggering CANCEL and the way to disable this was to explicitly set its type to `button`.
 
-**Update:** initially I used the HTML attributes `required` and `minlength` to specify validity for the password field. However clicking on the visibility icon in the field caused its validity to be updated immediately (even though from a user point of view you haven't left the field) and it was visually marked in red as invalid (if you hadn't already entered the minimum required number of characters). So in the end I removed the `required` and `minlength` attributes. The field is now never marked as invalid and the connect button (that used to become enabled once the overall form stopped being invalid) is now disabled via a simple check on the password property of the underlying component.
+**Update:** initially I used the HTML attributes `required` and `minlength` to specify validity for the password field. However, clicking on the visibility icon in the field caused its validity to be updated immediately (even though from a user point of view you haven't left the field) and it was visually marked in red as invalid (if you hadn't already entered the minimum required number of characters). So in the end I removed the `required` and `minlength` attributes. The field is now never marked as invalid and the connect button (that used to become enabled once the overall form stopped being invalid) is now disabled via a simple check on the password property of the underlying component.
 
 Note: Angular has two different approaches to handling forms - template-driven and reactive. Template-driven forms use the standard HTML attributes, like `minlength` etc., to establish validity. While initially simple, this doesn't work out so well once things get a little bit complicated - for this you need reactive forms where the validity is configured in the underlying component class. See the Angular [forms guide](https://angular.io/guide/forms-overview) for more.
 
