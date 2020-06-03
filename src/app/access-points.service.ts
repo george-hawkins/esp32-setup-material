@@ -47,8 +47,8 @@ export class AccessPointsService {
       return of(new ConnectResponse(point, ConnectStatus.FAILURE));
     } else {
       // Depending on the level at which the error was generated HttpErrorResponse.error may
-      // contain more useful information than HttpErrorResponse.message. However message is
-      // always a string whereas message may be anything, e.g. a plain string or structured data.
+      // contain more useful information than HttpErrorResponse.message. However .message is
+      // always a string whereas .error may be anything, e.g. a plain string or structured data.
       const response = new ConnectResponse(point, ConnectStatus.UNEXPECTED_FAILURE, error.message);
 
       return this.handleError<ConnectResponse>('connect', response)(error);

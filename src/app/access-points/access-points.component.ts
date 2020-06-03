@@ -17,6 +17,11 @@ import { AuthMode } from '../AuthMode';
 
 
 // 250px looks narrow on a large screen but is about right for smartphones.
+// One could calculate the width programmatically using the barely documented
+// https://github.com/angular/components/blob/master/src/cdk/scrolling/viewport-ruler.ts
+// Adjusting the dialog width to the screen size seems a perfect application for
+// CSS @media queries but Angular dialogs don't support this approach very well.
+// See also https://stackoverflow.com/q/35527456/245602
 const DIALOG_WIDTH = '250px';
 
 const KEEP_ALIVE_INTERVAL = 2; // 2s.
@@ -76,7 +81,7 @@ export class AccessPointsComponent implements OnInit {
     if (this.isDisabled(point.authmode)) {
       // Do nothing. Previously `isDisabled` was used to set the button, corresponding
       // to this access point, to disabled but this made the button look more
-      // highlighted than disabled. Now just the red lock icon is all that flags up
+      // highlighted than disabled. Now the red lock icon is all that flags up
       // these "problem" access points.
     } else if (point.authmode === AuthMode.OPEN) {
       this.openConnect(point);
