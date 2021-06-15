@@ -55,6 +55,8 @@ New releases of Angular and the other packages in this project come out fairly r
 
     $ ng update --all
 
+**Update:** you should now use <https://update.angular.io/> instead (see git history for steps needed for previous updates).
+
 And then check if there's anything left that it didn't update:
 
     $ npm outdated
